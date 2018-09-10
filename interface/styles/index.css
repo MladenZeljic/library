@@ -1,0 +1,69 @@
+html,body{
+	height:100%;
+	width:100%;
+}
+
+.form-hide{
+	display:none;
+}
+
+.login-form, .register-form{
+	width:500px;
+	padding-top:35px;
+	padding-bottom:35px;
+	padding-left: 13.666667%;	
+}
+
+.login-form-wrap{
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	-webkit-transform: translate(-50%, -50%);
+	transform: translate(-50%, -50%);
+}
+
+.register-form-wrap{
+	display: block;
+  	margin-left: auto;
+  	margin-right: auto;
+	width:500px;
+	padding-top: 50px;
+	padding-bottom:50px;
+}
+
+.form-box{	
+	height:100%;
+	box-shadow: 10px 10px 20px 2px grey;
+}
+
+.form-title{
+	text-align: center;
+	font-weight: 900 !important;
+	font-size: 25px;
+	padding-bottom: 40px;
+}
+
+.form-button-wrap{
+	padding-top: 30px;
+}
+
+.form-button{
+	width:100% !important;
+}
+
+.center-link{
+	display: flex;
+	justify-content: center;
+}
+
+.col-fix{
+	max-width: 27.666667% !important;
+}
+
+.form-hide{
+	display:none;
+}
+
+p:hover{
+ cursor: pointer;
+}
