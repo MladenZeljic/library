@@ -1,11 +1,11 @@
 <?php
 
-	require_once '../../data/data_connect/connection.php';
-	require_once '../../data/data_access/query_interface.php';
-	require_once '../../data/data_access/addressDAO.php';
-	require_once '../../data/data_access/userDAO.php';
-	require_once '../../data/data_models/membership.php';
-	require_once '../../data/data_models/user.php';
+	require_once __DIR__.'/../../data/data_connect/connection.php';
+	require_once __DIR__.'/../../data/data_access/query_interface.php';
+	require_once __DIR__.'/../../data/data_access/addressDAO.php';
+	require_once __DIR__.'/../../data/data_access/userDAO.php';
+	require_once __DIR__.'/../../data/data_models/membership.php';
+	require_once __DIR__.'/../../data/data_models/user.php';
 	
 	class memberDAO extends connection implements query_interface{
 		

@@ -3,12 +3,14 @@
 		protected $_id_lend;
 		protected $_lend_date;
 		protected $_return_date;
+		protected $_approved;
 		protected $_book_copy;
 		protected $_member;
 		
-		public function __construct ($lend_date, $return_date, $book_copy, $member) {
+		public function __construct ($lend_date, $return_date, $approved, $book_copy, $member) {
 			$this->_lend_date = $lend_date;
 			$this->_return_date = $return_date;
+			$this->_approved = $approved;
 			$this->_book_copy = $book_copy;
 			$this->_member = $member;
     		}
@@ -35,6 +37,14 @@
  
    		public function get_return_date() {
 			return $this->_return_date;
+		}
+		
+		public function set_approved($approved) { 
+			$this->_approved = $approved;  
+ 		}
+ 
+   		public function get_approved() {
+			return $this->_approved;
 		}
 		
 		public function set_book_copy($book_copy) { 

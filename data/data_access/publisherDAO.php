@@ -1,9 +1,9 @@
 <?php
 
-	require_once '../../data/data_connect/connection.php';
-	require_once '../../data/data_access/query_interface.php';
-	require_once '../../data/data_models/publisher.php';
-	require_once '../../data/data_models/address.php';
+	require_once __DIR__.'/../../data/data_connect/connection.php';
+	require_once __DIR__.'/../../data/data_access/query_interface.php';
+	require_once __DIR__.'/../../data/data_models/publisher.php';
+	require_once __DIR__.'/../../data/data_models/address.php';
 
 	class publisherDAO extends connection implements query_interface{
 		

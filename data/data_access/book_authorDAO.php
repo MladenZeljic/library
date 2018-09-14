@@ -1,7 +1,7 @@
 <?php
 
-	require_once '../../data/data_connect/connection.php';
-	require_once '../../data/data_access/query_interface.php';
+	require_once __DIR__.'/../../data/data_connect/connection.php';
+	require_once __DIR__.'/../../data/data_access/query_interface.php';
 	
 	class book_authorDAO extends connection {
 		

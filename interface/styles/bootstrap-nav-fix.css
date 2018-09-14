@@ -1,0 +1,32 @@
+.nav-fix{
+	box-shadow: 2px 2px 25px 2px grey;
+	background-color: #fff;
+}
+
+.open > .dropdown-menu {
+	display: block;
+}
+
+.nav-logo{
+	display: inline-block;
+	background-image: url("../../resources/images/library-icon.png");
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: cover;
+	width:40px;
+	height:40px;
+}
+.nav-text{
+	position: absolute;
+	top: 50%;
+	-webkit-transform: translateY(-50%);
+	-ms-transform: translateY(-50%);
+	transform: translateY(-50%);
+	padding-left:10px;
+}
+
+.nav-logo-wrap{
+	position: relative;
+	height: 40px;
+	width: 160px;
+}

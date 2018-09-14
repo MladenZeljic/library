@@ -32,3 +32,19 @@ function fade_login(){
 		register_form.classList.remove("form-hide");
 	},200);
 }
+function validate_form(form){
+	
+	var inputs = form.getElementsByTagName("input");
+	for(var i = 0; i < inputs.length; i++){
+		console.log(inputs[i].value.trim().length);
+		if (inputs[i].type && inputs[i].type === 'checkbox') {
+			break;
+		}
+		else{
+			if(inputs[i].value==="" && inputs[i].value.length === 0 || inputs[i].value.trim().length === 0){
+				return false;
+			}
+		}
+	}
+	return true;		
+}

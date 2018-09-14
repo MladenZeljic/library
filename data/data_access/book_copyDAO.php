@@ -1,12 +1,12 @@
 <?php
 
-	require_once '../../data/data_connect/connection.php';
-	require_once '../../data/data_access/query_interface.php';
-	require_once '../../data/data_access/bookDAO.php';
-	require_once '../../data/data_access/publisherDAO.php';
-	require_once '../../data/data_models/book.php';
-	require_once '../../data/data_models/book_copy.php';
-	require_once '../../data/data_models/publisher.php';
+	require_once __DIR__.'/../../data/data_connect/connection.php';
+	require_once __DIR__.'/../../data/data_access/query_interface.php';
+	require_once __DIR__.'/../../data/data_access/bookDAO.php';
+	require_once __DIR__.'/../../data/data_access/publisherDAO.php';
+	require_once __DIR__.'/../../data/data_models/book.php';
+	require_once __DIR__.'/../../data/data_models/book_copy.php';
+	require_once __DIR__.'/../../data/data_models/publisher.php';
 	
 	class book_copyDAO extends connection implements query_interface{
 		

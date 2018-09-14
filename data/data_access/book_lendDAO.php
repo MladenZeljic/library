@@ -1,12 +1,12 @@
 <?php
 
-	require_once '../../data/data_connect/connection.php';
-	require_once '../../data/data_access/query_interface.php';
-	require_once '../../data/data_access/book_copyDAO.php';
-	require_once '../../data/data_access/memberDAO.php';
-	require_once '../../data/data_models/book_copy.php';
-	require_once '../../data/data_models/lend.php';
-	require_once '../../data/data_models/membership.php';
+	require_once __DIR__.'/../../data/data_connect/connection.php';
+	require_once __DIR__.'/../../data/data_access/query_interface.php';
+	require_once __DIR__.'/../../data/data_access/book_copyDAO.php';
+	require_once __DIR__.'/../../data/data_access/memberDAO.php';
+	require_once __DIR__.'/../../data/data_models/book_copy.php';
+	require_once __DIR__.'/../../data/data_models/lend.php';
+	require_once __DIR__.'/../../data/data_models/membership.php';
 	
 	class book_lendDAO extends connection implements query_interface{
 		
@@ -28,7 +28,7 @@
 					$book_copy = $book_copyDao->get_by_id($row["id_book_copy"]);
 					$member = $memberDao->get_by_id($row["id_member"]);
 					$lend = new book_lend($row["lend_date"],$row["return_date"],
-							      $book_copy, $member);
+							      $row["approved"],$book_copy, $member);
 					$lend->set_id_lend($row["id_lend"]);
 					array_push($lends,$lend);
 				}
@@ -54,7 +54,7 @@
 				$book_copy = $book_copyDao->get_by_id($row["id_book_copy"]);
 				$member = $memberDao->get_by_id($row["id_member"]);
 				$lend = new book_lend($row["lend_date"],$row["return_date"],
-								     $book_copy, $member);
+						      $row["approved"], $book_copy, $member);
 				$lend->set_id_lend($row["id_lend"]);
 				return $lend;
 			}
@@ -81,7 +81,7 @@
 					$book_copy = $book_copyDao->get_by_id($row["id_book_copy"]);
 					$member = $memberDao->get_by_id($row["id_member"]);
 					$lend = new book_lend($row["lend_date"],$row["return_date"],
-							      $book_copy, $member);
+							      $row["approved"], $book_copy, $member);
 					$lend->set_id_lend($row["id_lend"]);
 					array_push($lends,$lend);
 				}
@@ -109,7 +109,59 @@
 					$book_copy = $book_copyDao->get_by_id($row["id_book_copy"]);
 					$member = $memberDao->get_by_id($row["id_member"]);
 					$lend = new book_lend($row["lend_date"],$row["return_date"],
-							      $book_copy, $member);
+							      $row["approved"], $book_copy, $member);
+					$lend->set_id_lend($row["id_lend"]);
+					array_push($lends,$lend);
+				}
+			}
+			return $lends;
+		}
+
+		public function get_approved(){
+			
+			$connection = $this->get_connection();
+			$sql = "SELECT * FROM book_lend WHERE approved = 1";
+			$statement = $connection->prepare($sql);
+			$statement->execute();
+			$results = $statement->get_result();
+			 
+			$lends = array();
+			
+			if ($results->num_rows > 0) {
+				while($row = $results->fetch_assoc()) {
+					$book_copyDao = new book_copyDAO();
+					$memberDao = new memberDAO();
+	
+					$book_copy = $book_copyDao->get_by_id($row["id_book_copy"]);
+					$member = $memberDao->get_by_id($row["id_member"]);
+					$lend = new book_lend($row["lend_date"],$row["return_date"],
+							      $row["approved"], $book_copy, $member);
+					$lend->set_id_lend($row["id_lend"]);
+					array_push($lends,$lend);
+				}
+			}
+			return $lends;
+		}
+
+		public function get_not_approved(){
+			
+			$connection = $this->get_connection();
+			$sql = "SELECT * FROM book_lend WHERE approved = 0";
+			$statement = $connection->prepare($sql);
+			$statement->execute();
+			$results = $statement->get_result();
+			 
+			$lends = array();
+			
+			if ($results->num_rows > 0) {
+				while($row = $results->fetch_assoc()) {
+					$book_copyDao = new book_copyDAO();
+					$memberDao = new memberDAO();
+	
+					$book_copy = $book_copyDao->get_by_id($row["id_book_copy"]);
+					$member = $memberDao->get_by_id($row["id_member"]);
+					$lend = new book_lend($row["lend_date"],$row["return_date"],
+							      $row["approved"], $book_copy, $member);
 					$lend->set_id_lend($row["id_lend"]);
 					array_push($lends,$lend);
 				}
@@ -137,7 +189,7 @@
 					$book_copy = $book_copyDao->get_by_id($row["id_book_copy"]);
 					$member = $memberDao->get_by_id($row["id_member"]);
 					$lend = new book_lend($row["lend_date"],$row["return_date"],
-							      $book_copy, $member);
+							      $row["approved"],$book_copy, $member);
 					$lend->set_id_lend($row["id_lend"]);
 					array_push($lends,$lend);
 				}
@@ -165,7 +217,7 @@
 					$book_copy = $book_copyDao->get_by_id($row["id_book_copy"]);
 					$member = $memberDao->get_by_id($row["id_member"]);
 					$lend = new book_lend($row["lend_date"],$row["return_date"],
-							      $book_copy, $member);
+							      $row["approved"],$book_copy, $member);
 					$lend->set_id_lend($row["id_lend"]);
 					array_push($lends,$lend);
 				}
@@ -180,18 +232,19 @@
 			if(!$db_object){
 				$connection = $this->get_connection();
 				
-				$sql = "INSERT INTO book_lend (lend_date, return_date, 
+				$sql = "INSERT INTO book_lend (lend_date, return_date, approved,
 							       id_book_copy,id_member)
-							       VALUES (?,?,?,?)";
+							       VALUES (?,?,?,?,?)";
 				$statement = $connection->prepare($sql);
 				
 				//bind_param accepts only variables
 				$lend_date = $object->get_lend_date();
 				$return_date = $object->get_return_date();
+				$approved = $object->get_approved();
 				$id_book_copy = $object->get_book_copy()->get_id_book_copy();
 				$id_member = $object->get_member()->get_id_member();
 				
-				$statement->bind_param("ssii",$lend_date, $return_date,
+				$statement->bind_param("ssiii",$lend_date, $return_date, $approved,
 								  $id_book_copy,$id_member);
 
 				$lend_insert = $statement->execute();
@@ -214,17 +267,18 @@
 			if($db_object){
 				$connection = $this->get_connection();
 				
-				$sql = "UPDATE book_copy SET lend_date = ?, return_date = ?, 
+				$sql = "UPDATE book_copy SET lend_date = ?, return_date = ?, approved = ?, 
 							     id_book_copy = ?, id_member = ?
 							     WHERE id_book_copy = ?";
 				$lend_date = $object->get_lend_date();
 				$return_date = $object->get_return_date();
+				$approved = $object->get_approved();
 				$id_book_copy = $object->get_book_copy()->get_id_book_copy();
 				$id_member = $object->get_member()->get_id_member();
 				$id_lend = $db_object->get_id_lend();
 				
-				$statement->bind_param("ssiii",$lend_date, $return_date,
-								  $id_book_copy,$id_member,$id_lend);
+				$statement->bind_param("ssiii",$lend_date, $return_date, $approved,
+							       $id_book_copy,$id_member,$id_lend);
 												   
 				return $statement->execute();
 			}

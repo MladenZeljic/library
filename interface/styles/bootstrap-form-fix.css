@@ -1,0 +1,68 @@
+.form-hide{
+	display:none;
+}
+
+.login-form, .register-form{
+	width:500px;
+	padding:35px 0px 35px 13.666667%;	
+}
+
+.login-form-wrap{
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	-webkit-transform: translate(-50%, -50%);
+	transform: translate(-50%, -50%);
+}
+
+.register-form-wrap{
+	display: block;
+  	margin-left: auto;
+  	margin-right: auto;
+	width:500px;
+	padding: 50px 0px;
+}
+
+.user-form-wrap{
+	padding: 50px 0px;
+}
+.user-form-box{	
+	height:100%;
+}
+
+.form-box{	
+	height:100%;
+	box-shadow: 10px 10px 20px 2px grey;
+}
+
+.form-title{
+	text-align: center;
+	font-weight: 900;
+	font-size: 25px;
+	padding-bottom: 40px;
+}
+
+.form-button-wrap{
+	padding-top: 30px;
+}
+
+.user-form-button-wrap{
+	padding-top: 30px;
+	margin: 0 auto;
+	width: 500px;
+}
+
+.form-button{
+	width:100% !important;
+}
+.user-col-fix{
+	max-width: 100% !important;
+}
+.form-section{
+	float:left;
+	width:50%;
+	padding: 2% 2.4%;
+}
+.clear{
+	clear:both;
+}

@@ -1,0 +1,14 @@
+.page-body-wrap{
+	padding:2.2% 1.4%;
+}
+.page-body{
+	width:100%;
+	height:100%;
+	box-shadow: 10px 10px 20px 2px grey;
+}
+.left-section{
+	padding-right:0px !important;
+}
+.form-title-fix{
+	max-width:100% !important;
+}

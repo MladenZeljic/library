@@ -1,12 +1,12 @@
 <?php
 
-	require_once '../../data/data_connect/connection.php';
-	require_once '../../data/data_access/query_interface.php';
-	require_once '../../data/data_access/book_authorDAO.php';
-	require_once '../../data/data_models/author.php';
-	require_once '../../data/data_models/book.php';
-	require_once '../../data/data_models/category.php';
-	require_once '../../data/data_models/genre.php';
+	require_once __DIR__.'/../../data/data_connect/connection.php';
+	require_once __DIR__.'/../../data/data_access/query_interface.php';
+	require_once __DIR__.'/../../data/data_access/book_authorDAO.php';
+	require_once __DIR__.'/../../data/data_models/author.php';
+	require_once __DIR__.'/../../data/data_models/book.php';
+	require_once __DIR__.'/../../data/data_models/category.php';
+	require_once __DIR__.'/../../data/data_models/genre.php';
 	
 	class authorDAO extends connection implements query_interface {
 		
