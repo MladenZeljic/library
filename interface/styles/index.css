@@ -1,21 +1,8 @@
-html,body{
-	height:100%;
-	width:100%;
+.index-footer-logo-wrap{
+	margin:0 auto;
+	padding-top: 5%;
 }
 
-.center-link{
-	display: flex;
-	justify-content: center;
-}
-
-.col-fix{
-	max-width: 28.666667% !important;
-}
-
-.form-hide{
-	display:none !important;
-}
-
-p:hover{
- cursor: pointer;
+a{
+	outline: none;
 }

@@ -2,6 +2,7 @@
 
 	require_once __DIR__.'/../../data/data_connect/connection.php';
 	require_once __DIR__.'/../../data/data_access/query_interface.php';
+	require_once __DIR__.'/../../data/data_access/roleDAO.php';
 	require_once __DIR__.'/../../data/data_models/user.php';
 
 	class userDAO extends connection implements query_interface{
@@ -12,11 +13,13 @@
 			$sql = "SELECT * FROM user";
 			$results = $connection->query($sql);
 			$users = array();
+			$roleDao = new roleDAO();
 			
 			if ($results->num_rows > 0) {
 				while($row = $results->fetch_assoc()) {
+					$role = $roleDao->get_by_id($row["id_role"]);
 					$user = new user($row["firstname"],$row["lastname"],$row["date_of_birth"], $row["e_mail"],
-					$row["username"],$row["password"],$row["approval"],$row["admin"],$row["status"]);
+					$row["username"],$row["password"],$row["approval"],$row["status"],$role);
 					$user->set_id_user($row["id_user"]);
 					array_push($users,$user);
 				}
@@ -32,12 +35,14 @@
 			$statement = $connection->prepare($sql);
 			$statement->bind_param("i",$id);
 			$statement->execute();
-			$result = $statement->get_result();
+			$result = $statement->get_result();			
+			$roleDao = new roleDAO();
 			
 			if ($result->num_rows == 1) {
 				$row = $result->fetch_assoc();
-				$user = new user($row["firstname"],$row["lastname"],$row["date_of_birth"], $row["e_mail"],
-					$row["username"],$row["password"],$row["approval"],$row["admin"],$row["status"]);
+				$role = $roleDao->get_by_id($row["id_role"]);
+				$user = new user($row["firstname"],$row["lastname"],$row["date_of_birth"],$row["e_mail"],
+					$row["username"],$row["password"],$row["approval"],$row["status"],$role);
 					
 				$user->set_id_user($row["id_user"]);
 				return $user;
@@ -54,11 +59,36 @@
 			$statement->bind_param("s",$username);
 			$statement->execute();
 			$result = $statement->get_result();
+			$roleDao = new roleDAO();
 			
 			if ($result->num_rows == 1) {
 				$row = $result->fetch_assoc();
+				$role = $roleDao->get_by_id($row["id_role"]);
 				$user = new user($row["firstname"],$row["lastname"],$row["date_of_birth"], $row["e_mail"],
-					$row["username"],$row["password"],$row["approval"],$row["admin"],$row["status"]);
+					$row["username"],$row["password"],$row["approval"],$row["status"],$role);
+					
+				$user->set_id_user($row["id_user"]);
+				return $user;
+			}
+			return null;
+		}
+		
+		public function get_by_e_mail($e_mail){
+			
+			$connection = $this->get_connection();
+			
+			$sql = "SELECT * FROM user WHERE e_mail = ? ";
+			$statement = $connection->prepare($sql);
+			$statement->bind_param("s",$e_mail);
+			$statement->execute();
+			$result = $statement->get_result();
+			$roleDao = new roleDAO();
+			
+			if ($result->num_rows == 1) {
+				$row = $result->fetch_assoc();
+				$role = $roleDao->get_by_id($row["id_role"]);
+				$user = new user($row["firstname"],$row["lastname"],$row["date_of_birth"], $row["e_mail"],
+					$row["username"],$row["password"],$row["approval"],$row["status"],$role);
 					
 				$user->set_id_user($row["id_user"]);
 				return $user;
@@ -74,7 +104,7 @@
 				$connection = $this->get_connection();
 				
 				$sql = "INSERT INTO user (firstname, lastname, date_of_birth, e_mail, 
-					username, password, approval, admin, status)
+					username, password, approval, status, id_role)
 					VALUES (?,?,?,?,?,?,?,?,?)";
 				$statement = $connection->prepare($sql);
 				
@@ -86,11 +116,11 @@
 				$username = $object->get_username();
 				$password = $object->get_password();
 				$approval = $object->get_approval();
-				$admin = $object->get_admin();
 				$status = $object->get_status();
+				$id_role = $object->get_role()->get_id_role();
 				
 				$statement->bind_param("ssssssiii",$firstname,$lastname,$date_of_birth,
-								   $email,$username,$password,$approval,$admin,$status);
+								   $email,$username,$password,$approval,$status,$id_role);
 			
 				return $statement->execute();
 			}
@@ -104,7 +134,7 @@
 				$connection = $this->get_connection();
 				
 				$sql = "UPDATE user SET firstname = ?, lastname = ?, date_of_birth = ?, e_mail = ?,
-					username = ?, password = ?, approval = ?, admin = ?, status = ? WHERE id_user = ?";
+					username = ?, password = ?, approval = ?, status = ?, id_role = ? WHERE id_user = ?";
 				$statement = $connection->prepare($sql);
 				
 				$firstname = $new_object->get_firstname();
@@ -114,12 +144,12 @@
 				$username = $new_object->get_username();
 				$password = $new_object->get_password();
 				$approval = $new_object->get_approval();
-				$admin = $new_object->get_admin();
 				$status = $new_object->get_status();
+				$id_role = $new_object->get_role()->get_id_role();
 				$id = $db_object->get_id_user();
 				
 				$statement->bind_param("ssssssiiii",$firstname,$lastname,$date_of_birth,
-								    $email,$username,$password,$approval,$admin,$status,$id);
+								    $email,$username,$password,$approval,$status,$id_role,$id);
 												   
 				return $statement->execute();
 			}

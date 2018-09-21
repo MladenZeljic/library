@@ -8,10 +8,10 @@
 		protected $_username;
 		protected $_password;
 		protected $_approval;
-		protected $_admin;
 		protected $_status;
+		protected $_role;
 		
-		public function __construct ($firstname, $lastname, $date_of_birth, $e_mail, $username, $password, $approval, $admin, $status) {
+		public function __construct ($firstname, $lastname, $date_of_birth, $e_mail, $username, $password, $approval, $status, $role) {
 			$this->_firstname = $firstname;
 			$this->_lastname = $lastname;
 			$this->_date_of_birth = $date_of_birth;
@@ -19,8 +19,8 @@
 			$this->_username = $username;
 			$this->_password = $password;
 			$this->_approval = $approval;
-			$this->_admin = $admin;
 			$this->_status = $status;
+			$this->_role = $role;
     		}
 
    		public function set_id_user($id_user) {
@@ -87,14 +87,6 @@
 			return $this->_approval;
 		}
 		
-		public function set_admin($admin) { 
-			$this->_admin = $admin;  
- 		}
-		
-		public function get_admin() {
-			return $this->_admin;
-		}
-		
 		public function set_status($status) { 
 			$this->_status = $status;  
  		}
@@ -102,6 +94,15 @@
 		public function get_status() {
 			return $this->_status;
 		}
+
+		public function set_role($role) { 
+			$this->_role = $role;  
+ 		}
+		
+		public function get_role() {
+			return $this->_role;
+		}
+		
 		
 	} 
 ?>

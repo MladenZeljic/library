@@ -1,15 +1,16 @@
 <?php
-	require_once __DIR__.'/data/data_access/bookDAO.php';
-	require_once __DIR__.'/data/data_access/userDAO.php';
-	require_once __DIR__.'/data/data_controllers/index_controller.php';
-	
+	require_once __DIR__.'/../../data/data_access/bookDAO.php';
+	require_once __DIR__.'/../../data/data_controllers/book_management_controller.php';
 
-	$index_controller = new index_controller();
+	$common_user_controller = new common_user_controller();
+	$common_user_controller->do_action();
+	
+	$userDao = new userDAO();
+	$user = $userDao->get_by_username($_SESSION["username"]);
 	
 	$helper = new helpers();	
 	$id = 1;
 	
-	$index_controller->do_action();	
 	$bookDao = new bookDAO();
 	$max_records = 5;
 	
@@ -39,35 +40,51 @@
 <!DOCTYPE HTML>
 <html>
 	<head>
-		<title>Welcome page</title>
+		<title>Book management</title>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<link rel="shortcut icon" type="image/x-icon" href="resources/images/library-icon.ico" />
-		<link rel="stylesheet" href="interface/styles/css/bootstrap.min.css" />
-		<link rel="stylesheet" href="interface/styles/bootstrap-nav-fix.css" />
-		<link rel="stylesheet" href="interface/styles/admin-manager.css" />
-		<link rel="stylesheet" href="interface/styles/bootstrap-form-fix.css" />
-		<link rel="stylesheet" href="interface/styles/page.css" />
-		<link rel="stylesheet" href="interface/styles/index.css" />
-		<link rel="stylesheet" href="interface/styles/footer.css" />
+		<link rel="shortcut icon" type="image/x-icon" href="../../resources/images/library-icon.ico" />
+		<link rel="stylesheet" href="../styles/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="../styles/bootstrap-nav-fix.css" />
+		<link rel="stylesheet" href="../styles/bootstrap-form-fix.css" />
+		<link rel="stylesheet" href="../styles/page.css" />
+		<link rel="stylesheet" href="../styles/footer.css" />
 	</head>
 	<body>
 		<nav class="navbar navbar-expand-lg nav-fix sticky-top navbar-light bg-light">
 			<a class="navbar-brand" href="javascript:void();"><div class="nav-logo-wrap"><div class="nav-logo"></div> <span class="nav-text">E-LIBRARY</span></div> </a>
 			<ul class="navbar-nav mr-auto">
 				<li class="nav-item">
-					<a class="nav-link active" href="">Welcome<span class="sr-only">(current)</span></a>
+					<a class="nav-link" href="/project/interface/pages/user-profile.php">My profile</a>
+				</li>
+				<!--There are only library options on this page, because only librarian can access this page-->
+				<li class="nav-item dropdown">
+					<a class="nav-link dropdown-toggle active" href="javascript:void();" id="navbarLibraryDropdown" role="button" data-toggle="dropdown"><span class="sr-only">(current)</span>
+						Library options
+					</a>
+					<div class="dropdown-menu">
+						<a class="dropdown-item" href="/project/interface/pages/author-management.php">Manage authors</a>
+						<a class="dropdown-item  active" href="/project/interface/pages/book-management.php">Manage books</a>
+						<a class="dropdown-item" href="#">Manage book lendings</a>
+						<a class="dropdown-item" href="#">Manage members</a>	
+						<a class="dropdown-item" href="#">Manage publishers</a>
+					</div>
 				</li>
 				<li class="nav-item">
-					<a class="nav-link" href="interface/pages/login-register.php">Sign in/ sign up</a>
+					<form id="logout" method="get" action="">
+						<input type="hidden" name="logout" value="logout" /> 
+						<a class="nav-link" href="javascript:void();" onclick="document.getElementById('logout').submit();">Log out</a>
+					</form>
 				</li>
 			</ul>
 			<form class="form-inline my-2 my-lg-0" method="get">
-				<input class="form-control mr-sm-2" type="search" name="search-input" placeholder="Search books by title">
+				<input class="form-control mr-sm-2" type="search" name="search-input" placeholder="Search authors by name">
 				<button class="btn btn-outline-success my-2 my-sm-0" type="submit" name="search" value="search">Search</button>
 			</form>
+			
 		</div>
 	</nav>
+
 
 	
 
@@ -146,7 +163,7 @@
 						} 
 					}
 					echo " onclick=mark_page_as_active('table-nums',this);"; 
-					echo " href=index.php";
+					echo " href=book-management.php";
 					if(!isset($_GET["search"])){ 
 						echo "?page=".$i;
 					} 
@@ -165,9 +182,25 @@
 				
 		
 	</div>
+	
 	<div class="footer-container">
 		<div class="row text-center text-xs-center text-sm-left text-md-left justify">
-			<div class="index-footer-logo-wrap text-center text-xs-center text-sm-left text-md-left"><div class="footer-logo"></div><div class="footer-logo-text">E-LIBRARY</div></div> 
+			<div class="col-xs-12 col-sm-4 col-md-4 links">
+				<h5>Quick links</h5>
+				<ul class="list-unstyled quick-links">
+					<li><a href="/project/interface/pages/user-profile.php">Home</a></li>
+					<li>
+						<form id="log-out" method="get" action="">
+							<input type="hidden" name="log-out" value="logout" /> 
+							<a href="javascript:void();" onclick="document.getElementById('log-out').submit();">
+								Log out
+							</a>
+						</form>
+					</li>
+				</ul>
+			</div>
+			
+			<div class="footer-logo-wrap  text-center text-xs-center text-sm-left text-md-left "><div class="footer-logo"></div><div class="footer-logo-text">E-LIBRARY</div></div> 
 		</div>
 		<div class="row">
 			<div class="col-xs-12 col-sm-12 col-md-12 mt-2 mt-sm-2 text-center col-spacing">
@@ -178,6 +211,5 @@
 	</div>
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 	<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
-	<script src="../scripts/index.js"></script>
 </body>
 </html>

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Sep 14, 2018 at 04:11 PM
+-- Generation Time: Sep 21, 2018 at 06:28 PM
 -- Server version: 10.1.35-MariaDB
 -- PHP Version: 7.2.9
 
@@ -87,7 +87,9 @@ INSERT INTO `book` (`id_book`, `book_title`, `original_book_title`, `id_category
 (9, 'Knjiga1', 'Book1', 1),
 (10, 'Knjiga2', 'Book2', 1),
 (11, 'Knjiga3', 'Book3', 1),
-(12, 'Knjiga4', 'Book4', 1);
+(12, 'Knjiga4', 'Book4', 1),
+(13, 'Knjiga5', 'Book5', 2),
+(14, 'Knjiga6', 'Book6', 2);
 
 -- --------------------------------------------------------
 
@@ -269,6 +271,26 @@ INSERT INTO `publisher` (`id_publisher`, `publisher_name`, `id_address`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `role`
+--
+
+CREATE TABLE `role` (
+  `id_role` int(11) NOT NULL,
+  `role_title` varchar(255) COLLATE utf32_croatian_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf32 COLLATE=utf32_croatian_ci;
+
+--
+-- Dumping data for table `role`
+--
+
+INSERT INTO `role` (`id_role`, `role_title`) VALUES
+(1, 'administrator'),
+(2, 'librarian'),
+(3, 'user');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `user`
 --
 
@@ -281,18 +303,20 @@ CREATE TABLE `user` (
   `username` varchar(20) COLLATE utf32_croatian_ci NOT NULL,
   `password` varchar(255) COLLATE utf32_croatian_ci NOT NULL,
   `approval` tinyint(4) NOT NULL DEFAULT '0',
-  `admin` tinyint(4) NOT NULL DEFAULT '0',
-  `status` tinyint(4) NOT NULL DEFAULT '1'
+  `status` tinyint(4) NOT NULL DEFAULT '1',
+  `id_role` int(11) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf32 COLLATE=utf32_croatian_ci;
 
 --
 -- Dumping data for table `user`
 --
 
-INSERT INTO `user` (`id_user`, `firstname`, `lastname`, `date_of_birth`, `e_mail`, `username`, `password`, `approval`, `admin`, `status`) VALUES
-(1, 'Firstname', 'Lastnamea', '1998-10-11', 'mail@mail.com', 'uname', 'pass', 1, 0, 1),
-(2, 'Firstname', 'Lastname', '1990-09-03', 'mail@mial.com', 'user', 'pass', 0, 0, 1),
-(3, 'Name', 'Lastname', '1995-04-18', 'dasdasd@mail.com', 'das', '1234', 0, 0, 1);
+INSERT INTO `user` (`id_user`, `firstname`, `lastname`, `date_of_birth`, `e_mail`, `username`, `password`, `approval`, `status`, `id_role`) VALUES
+(1, 'Firstname', 'Lastname', '1998-10-11', 'mail@mail.com', 'uname', '$2y$10$.Fznhy92sSi8DsGa5qNHHOqI6KiVbEhDYXUp.EsDexR7uHP0QOBbq', 1, 1, 1),
+(2, 'Firstname', 'Lastname', '1990-09-03', 'mail@mial.com', 'user', '$2y$10$.Fznhy92sSi8DsGa5qNHHOqI6KiVbEhDYXUp.EsDexR7uHP0QOBbq', 1, 1, 2),
+(4, 'Myname', 'Mylastname', '1920-09-05', 'mymail@mail.com', 'myuser', '$2y$10$PQAn9MA24.FHgQSlBscHKOARal2RnxZcwSpqTWESSciD4dSxhpN32', 1, 1, 3),
+(5, 'fasdfsd', 'fsafsa', '2018-09-03', 'fasfas@mail.vo', 'username', '$2y$10$RD8Lm7Ca9IHWZhD2abEP5eyXQsTb4Yr8baIcEht57XAAbNvj8R1mu', 0, 1, 3),
+(6, 'Firstname', 'Lastname', '2018-09-06', 'email@mail.ba', 'usernm', '$2y$10$P6FlBC3ENxnbdZT5wjEpuOC0.r0/dYHI08iTa.vm/XjXpX9eQz29q', 0, 1, 3);
 
 --
 -- Indexes for dumped tables
@@ -377,12 +401,19 @@ ALTER TABLE `publisher`
   ADD KEY `id_address` (`id_address`);
 
 --
+-- Indexes for table `role`
+--
+ALTER TABLE `role`
+  ADD PRIMARY KEY (`id_role`);
+
+--
 -- Indexes for table `user`
 --
 ALTER TABLE `user`
   ADD PRIMARY KEY (`id_user`),
   ADD UNIQUE KEY `username` (`username`),
-  ADD UNIQUE KEY `e_mail` (`e_mail`);
+  ADD UNIQUE KEY `e_mail` (`e_mail`),
+  ADD KEY `id_role` (`id_role`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -404,7 +435,7 @@ ALTER TABLE `author`
 -- AUTO_INCREMENT for table `book`
 --
 ALTER TABLE `book`
-  MODIFY `id_book` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id_book` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `book_copy`
@@ -443,10 +474,16 @@ ALTER TABLE `publisher`
   MODIFY `id_publisher` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
+-- AUTO_INCREMENT for table `role`
+--
+ALTER TABLE `role`
+  MODIFY `id_role` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id_user` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id_user` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- Constraints for dumped tables
@@ -498,6 +535,12 @@ ALTER TABLE `member`
 --
 ALTER TABLE `publisher`
   ADD CONSTRAINT `publisher_ibfk_1` FOREIGN KEY (`id_address`) REFERENCES `address` (`id_address`);
+
+--
+-- Constraints for table `user`
+--
+ALTER TABLE `user`
+  ADD CONSTRAINT `user_role_fk` FOREIGN KEY (`id_role`) REFERENCES `role` (`id_role`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

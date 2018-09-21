@@ -1,0 +1,30 @@
+html,body{
+	height:100%;
+	width:100%;
+}
+
+.center-link{
+	display: flex;
+	justify-content: center;
+}
+
+.col-fix{
+	max-width: 28.666667% !important;
+}
+
+.form-hide{
+	display:none !important;
+}
+
+span:hover{
+	cursor: pointer;
+}
+.go-back{
+	display: block;
+	text-align: center;
+	outline: none;
+}
+.go-back:hover, .go-back:visited{
+	color: #212529;
+	text-decoration: none;
+}

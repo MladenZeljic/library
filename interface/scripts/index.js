@@ -48,3 +48,11 @@ function validate_form(form){
 	}
 	return true;		
 }
+function mark_page_as_active(divId,link){
+	var links = document.getElementById(divId).getElementsByTagName('a');
+	for (var i = 0; i < links.length; i++) {
+		console.log(links[i].classList.contains('page-active'));
+		links[i].classList.remove('page-active');
+	}
+	link.classList.add('page-active');
+}
