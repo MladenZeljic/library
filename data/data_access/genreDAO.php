@@ -3,7 +3,11 @@
 	require_once __DIR__.'/../../data/data_connect/connection.php';
 	require_once __DIR__.'/../../data/data_access/query_interface.php';
 	require_once __DIR__.'/../../data/data_access/book_genreDAO.php';
-	
+	require_once __DIR__.'/../../data/data_models/genre.php';
+	require_once __DIR__.'/../../data/data_models/category.php';
+	require_once __DIR__.'/../../data/data_models/book.php';
+	require_once __DIR__.'/../../data/data_models/author.php';
+
 	class genreDAO extends connection implements query_interface{
 		
 		public function get_all(){
@@ -26,7 +30,6 @@
 					$book_statement->bind_param("i",$genre_row["id_genre"]);				
 					$book_statement->execute();
 					$book_results = $book_statement->get_result();
-					echo $book_results->num_rows;
 					if ($book_results->num_rows > 0) {
 						while($book_row = $book_results->fetch_assoc()) {
 							$category = new category($book_row["category_title"]);
@@ -56,6 +59,120 @@
 			}
 			return $genres;
 
+		}
+
+		public function get_in_range($from, $limit){
+			$connection = $this->get_connection();
+			$genre_sql = "SELECT * FROM genre LIMIT ?,?";
+			$genre_statement = $connection->prepare($genre_sql);
+			$genre_statement->bind_param("ii", $from, $limit);
+			$genre_statement->execute();
+			$results = $genre_statement->get_result();
+			 
+			$genres = array();
+			
+			if ($results->num_rows > 0) {
+				while($genre_row = $results->fetch_assoc()) {
+					
+					$genre = new genre($genre_row["genre_title"]);
+					$genre->set_id_genre($genre_row["id_genre"]);
+					$books_sql = "SELECT * FROM book INNER JOIN book_genre ON book.id_book = book_genre.id_book INNER JOIN category ON book.id_category = category.id_category WHERE book_genre.id_genre = ?";
+					$book_statement = $connection->prepare($books_sql);
+					$book_statement->bind_param("i",$genre_row["id_genre"]);				
+					$book_statement->execute();
+					$book_results = $book_statement->get_result();
+					if ($book_results->num_rows > 0) {
+						while($book_row = $book_results->fetch_assoc()) {
+							$category = new category($book_row["category_title"]);
+							$category->set_id_category($book_row["id_category"]);
+							$book = new book($book_row["book_title"], $book_row["original_book_title"], $category);
+							$book->set_id_book($book_row["id_book"]);				
+							$author_sql = "SELECT * FROM author INNER JOIN book_author ON author.id_author = book_author.id_author INNER JOIN book ON book.id_book = book_author.id_book WHERE book.id_book = ?";
+							$author_statement = $connection->prepare($author_sql);
+							$author_statement->bind_param("i",$book_row["id_book"]);				
+							$author_statement->execute();
+							$author_results = $author_statement->get_result();
+					
+							if ($author_results->num_rows > 0) {
+								while($author_row = $author_results->fetch_assoc()) {
+									$author = new author($author_row["firstname"],$author_row["lastname"],$author_row["date_of_birth"],$author_row["short_biography"]);
+									$author->set_id_author($author_row["id_author"]);
+									$book->add_author($author);
+								}
+							}
+										
+							$genre->add_book($book);
+						}
+					}
+
+					array_push($genres,$genre);
+				}
+			}
+			return $genres;
+		}
+		
+		public function get_by_title_in_range($title ,$from, $limit){
+			$connection = $this->get_connection();
+			$genre_sql = "SELECT * FROM genre WHERE genre_title LIKE ? LIMIT ?,?";
+			$genre_statement = $connection->prepare($genre_sql);
+			$like = "%".$title."%";			
+			$genre_statement->bind_param("sii", $like, $from, $limit);
+			$genre_statement->execute();
+			$results = $genre_statement->get_result();
+			 
+			$genres = array();
+			
+			if ($results->num_rows > 0) {
+				while($genre_row = $results->fetch_assoc()) {
+					
+					$genre = new genre($genre_row["genre_title"]);
+					$genre->set_id_genre($genre_row["id_genre"]);
+					$books_sql = "SELECT * FROM book INNER JOIN book_genre ON book.id_book = book_genre.id_book INNER JOIN category ON book.id_category = category.id_category WHERE book_genre.id_genre = ?";
+					$book_statement = $connection->prepare($books_sql);
+					$book_statement->bind_param("i",$genre_row["id_genre"]);				
+					$book_statement->execute();
+					$book_results = $book_statement->get_result();
+					if ($book_results->num_rows > 0) {
+						while($book_row = $book_results->fetch_assoc()) {
+							$category = new category($book_row["category_title"]);
+							$category->set_id_category($book_row["id_category"]);
+							$book = new book($book_row["book_title"], $book_row["original_book_title"], $category);
+							$book->set_id_book($book_row["id_book"]);				
+							$author_sql = "SELECT * FROM author INNER JOIN book_author ON author.id_author = book_author.id_author INNER JOIN book ON book.id_book = book_author.id_book WHERE book.id_book = ?";
+							$author_statement = $connection->prepare($author_sql);
+							$author_statement->bind_param("i",$book_row["id_book"]);				
+							$author_statement->execute();
+							$author_results = $author_statement->get_result();
+					
+							if ($author_results->num_rows > 0) {
+								while($author_row = $author_results->fetch_assoc()) {
+									$author = new author($author_row["firstname"],$author_row["lastname"],$author_row["date_of_birth"],$author_row["short_biography"]);
+									$author->set_id_author($author_row["id_author"]);
+									$book->add_author($author);
+								}
+							}
+										
+							$genre->add_book($book);
+						}
+					}
+
+					array_push($genres,$genre);
+				}
+			}
+			return $genres;
+		}
+		
+		public function count_by_title($title){
+			$connection = $this->get_connection();
+			$sql = "SELECT COUNT(*) FROM genre WHERE genre_title LIKE ?";
+			$statement = $connection->prepare($sql);
+			$like = "%".$title."%";
+			$statement->bind_param("s", $like);			
+			$statement->execute();
+			$count_result = $statement->get_result();
+			$count_row = $count_result->fetch_assoc();
+			return $count_row['COUNT(*)'];	
+		
 		}
 		
 		public function get_by_id($id){
@@ -169,7 +286,6 @@
 
 				$book_genreDao = new book_genreDAO();
 				$book_insert = TRUE;
-				echo count($genre_books);
 				foreach($genre_books as $genre_book){
 					$id_book = $genre_book->get_id_book();
 					$book_genre_sql = "INSERT INTO book_genre (id_genre,id_book)

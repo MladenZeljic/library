@@ -51,7 +51,7 @@
 					</div>
 				</div>
 				<div class="col-sm-offset-2 col-sm-10 center-link">
-					<span><small onclick="fade_login()">You can also register</small> <small><a class="go-back" href="../../index.php">Go back</a></small></span>
+					<span><small onclick="fade_element('login-form','register-form')">You can also register</small> <small><a class="go-back" href="../../index.php">Go back</a></small></span>
 				</div>
 			</form>
 		</div>
@@ -102,7 +102,7 @@
 					</div>
 				</div>
 				<div class="col-sm-offset-2 col-sm-10 center-link">
-					<span class="action-link"><small onclick="fade_register()">Already have an account? </small> <small> <a class="go-back" href="../../index.php">Go back</a></small></span>
+					<span class="action-link"><small onclick="fade_element('register-form','login-form')">Already have an account? </small> <small> <a class="go-back" href="../../index.php">Go back</a></small></span>
 					
 				</div>
 			</form>

@@ -35,6 +35,165 @@
 			}
 			return $lends;
 		}
+		public function get_all_with_user($user){
+			
+			$connection = $this->get_connection();
+			$sql = "SELECT * FROM book_lend INNER JOIN member ON book_lend.id_member = member.id_member WHERE member.id_user = ? AND book_lend.approved = 1 ";
+			$statement = $connection->prepare($sql);
+			$id_user = $user->get_id_user();
+			$statement->bind_param("i",$id_user);
+			$statement->execute();
+			$results = $statement->get_result();
+			 
+			$lends = array();
+			
+			if ($results->num_rows > 0) {
+				while($row = $results->fetch_assoc()) {
+					$book_copyDao = new book_copyDAO();
+					$memberDao = new memberDAO();
+	
+					$book_copy = $book_copyDao->get_by_id($row["id_book_copy"]);
+					$member = $memberDao->get_by_id($row["id_member"]);
+					$lend = new book_lend($row["lend_date"],$row["return_date"],
+							      $row["approved"],$book_copy, $member);
+					$lend->set_id_lend($row["id_lend"]);
+					array_push($lends,$lend);
+				}
+			}
+			return $lends;
+		}
+		public function get_in_range($from, $limit){
+			$connection = $this->get_connection();
+			$sql = "SELECT * FROM book_lend  ORDER BY approved LIMIT ?,?";
+			$statement = $connection->prepare($sql);
+			$statement->bind_param("ii",$from, $limit);
+			$statement->execute();
+			$results = $statement->get_result();
+			 
+			$lends = array();
+			
+			if ($results->num_rows > 0) {
+				while($row = $results->fetch_assoc()) {
+					$book_copyDao = new book_copyDAO();
+					$memberDao = new memberDAO();
+	
+					$book_copy = $book_copyDao->get_by_id($row["id_book_copy"]);
+					$member = $memberDao->get_by_id($row["id_member"]);
+					$lend = new book_lend($row["lend_date"],$row["return_date"],
+							      $row["approved"],$book_copy, $member);
+					$lend->set_id_lend($row["id_lend"]);
+					array_push($lends,$lend);
+				}
+			}
+			return $lends;
+		}
+
+		public function get_by_name_in_range($name,$from, $limit){
+			$connection = $this->get_connection();
+			$sql = "SELECT * FROM book_lend INNER JOIN member ON book_lend.id_member = member.id_member INNER JOIN user ON user.id_user = member.id_user WHERE user.firstname LIKE ? OR user.lastname LIKE ? ORDER BY approved LIMIT ?,?";
+			$statement = $connection->prepare($sql);
+			$like = "%".$name."%";
+			$statement->bind_param("ssii",$like,$like, $from, $limit);
+			$statement->execute();
+			$results = $statement->get_result();
+			 
+			$lends = array();
+			
+			if ($results->num_rows > 0) {
+				while($row = $results->fetch_assoc()) {
+					$book_copyDao = new book_copyDAO();
+					$memberDao = new memberDAO();
+	
+					$book_copy = $book_copyDao->get_by_id($row["id_book_copy"]);
+					$member = $memberDao->get_by_id($row["id_member"]);
+					$lend = new book_lend($row["lend_date"],$row["return_date"],
+							      $row["approved"],$book_copy, $member);
+					$lend->set_id_lend($row["id_lend"]);
+					array_push($lends,$lend);
+				}
+			}
+			return $lends;
+		}
+		
+		public function count_by_name($name){
+			$connection = $this->get_connection();
+			$book_lend_sql = "SELECT COUNT(*) FROM book_lend INNER JOIN member ON book_lend.id_member = member.id_member INNER JOIN user ON user.id_user = member.id_user WHERE user.firstname LIKE ? OR user.lastname LIKE ?";
+			$book_lend_statement = $connection->prepare($book_lend_sql);
+			$like = "%".$name."%";
+			$book_lend_statement->bind_param("ss",$like,$like);
+			$book_lend_statement->execute();
+			$count_result = $book_lend_statement->get_result();
+			$count_row = $count_result->fetch_assoc();
+			return $count_row['COUNT(*)'];
+		}
+
+		public function get_in_range_with_user($user, $from, $limit){
+			$connection = $this->get_connection();
+			$sql = "SELECT * FROM book_lend INNER JOIN member ON book_lend.id_member = member.id_member WHERE member.id_user = ? AND book_lend.approved = 1 LIMIT ?,?";
+			$statement = $connection->prepare($sql);
+			$id_user = $user->get_id_user();
+			$statement->bind_param("iii",$id_user, $from, $limit);
+			$statement->execute();
+			$results = $statement->get_result();
+			 
+			$lends = array();
+			
+			if ($results->num_rows > 0) {
+				while($row = $results->fetch_assoc()) {
+					$book_copyDao = new book_copyDAO();
+					$memberDao = new memberDAO();
+	
+					$book_copy = $book_copyDao->get_by_id($row["id_book_copy"]);
+					$member = $memberDao->get_by_id($row["id_member"]);
+					$lend = new book_lend($row["lend_date"],$row["return_date"],
+							      $row["approved"],$book_copy, $member);
+					$lend->set_id_lend($row["id_lend"]);
+					array_push($lends,$lend);
+				}
+			}
+			return $lends;
+		}
+
+		public function get_by_name_in_range_with_user($user, $name,$from, $limit){
+			$connection = $this->get_connection();
+			$sql = "SELECT * FROM book_lend INNER JOIN member ON book_lend.id_member = member.id_member INNER JOIN user ON user.id_user = member.id_user WHERE user.id_user = ? AND book_lend.approved = 1 AND (user.firstname LIKE ? OR user.lastname LIKE ? ) LIMIT ?,?";
+			$statement = $connection->prepare($sql);
+			$like = "%".$name."%";
+			$id_user = $user->get_id_user();
+			$statement->bind_param("issii",$id_user, $like, $like, $from, $limit);
+			$statement->execute();
+			$results = $statement->get_result();
+			 
+			$lends = array();
+			
+			if ($results->num_rows > 0) {
+				while($row = $results->fetch_assoc()) {
+					$book_copyDao = new book_copyDAO();
+					$memberDao = new memberDAO();
+	
+					$book_copy = $book_copyDao->get_by_id($row["id_book_copy"]);
+					$member = $memberDao->get_by_id($row["id_member"]);
+					$lend = new book_lend($row["lend_date"],$row["return_date"],
+							      $row["approved"],$book_copy, $member);
+					$lend->set_id_lend($row["id_lend"]);
+					array_push($lends,$lend);
+				}
+			}
+			return $lends;
+		}
+		
+		public function count_by_name_with_user($user, $name){
+			$connection = $this->get_connection();
+			$book_lend_sql = "SELECT COUNT(*) FROM book_lend INNER JOIN member ON book_lend.id_member = member.id_member INNER JOIN user ON user.id_user = member.id_user WHERE user.id_user = ? AND book_lend.approved = 1 AND (user.firstname LIKE ? OR user.lastname LIKE ? )";
+			$book_lend_statement = $connection->prepare($book_lend_sql);
+			$like = "%".$name."%";
+			$id_user = $user->get_id_user();
+			$book_lend_statement->bind_param("iss", $id_user, $like, $like);
+			$book_lend_statement->execute();
+			$count_result = $book_lend_statement->get_result();
+			$count_row = $count_result->fetch_assoc();
+			return $count_row['COUNT(*)'];
+		}
 		
 		public function get_by_id($id){
 			
@@ -227,7 +386,7 @@
 		
 		public function insert($object){
 			
-			$db_object = $this->get_by_id($object->get_id_lend());
+			$db_object = $this->get_by_book_copy($object->get_id_book_copy());
 			
 			if(!$db_object){
 				$connection = $this->get_connection();

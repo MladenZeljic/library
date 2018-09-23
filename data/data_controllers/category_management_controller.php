@@ -4,8 +4,8 @@
 	include_once __DIR__.'/../data_access/userDAO.php';
 	
 
-	//custom controller class for book-management.php page
-	class book_management_controller extends basic_controller {
+	//custom controller class for category-management.php page
+	class category_management_controller extends basic_controller {
 		
 		public function do_post_action(){
 

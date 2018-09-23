@@ -1,21 +1,19 @@
-<!DOCTYPE HTML>
 <?php
-	require_once __DIR__.'/../../data/data_access/userDAO.php';
-	require_once __DIR__.'/../../data/data_access/authorDAO.php';
-	require_once __DIR__.'/../../data/data_controllers/author_management_controller.php';
+	require_once __DIR__.'/../../data/data_access/publisherDAO.php';
+	require_once __DIR__.'/../../data/data_controllers/publisher_management_controller.php';
 
-	$author_management_controller = new author_management_controller();
-	$author_management_controller->do_action();
-	$helper = new helpers();	
+	$publisher_management_controller = new publisher_management_controller();
+	$publisher_management_controller->do_action();
+	
 	$userDao = new userDAO();
 	$user = $userDao->get_by_username($_SESSION["username"]);
-	$id = 1;
-	$current_page = 1;
-	$authorDao = new authorDAO();
-	$authors = $authorDao->get_all();
 	
+	$helper = new helpers();	
+	$id = 1;
+	
+	$publisherDao = new publisherDAO();
 	$max_records = 5;
-
+	
 	if(isset($_GET["page"])){
 		$page_number = $_GET["page"];
 		$from = ($page_number*$max_records)-$max_records;
@@ -25,36 +23,35 @@
 		$from = 0;
 	}
 	if(isset($_GET["search"])){
-		$authors = $authorDao->get_by_name_in_range($_GET["search-input"],$from,$max_records);
-		$authors_count = $authorDao->count_by_name($_GET["search-input"]);
+		$publishers = $publisherDao->get_by_name_in_range($_GET["search-input"],$from,$max_records);
+		$publishers_count = $publisherDao->count_by_name($_GET["search-input"]);
 		
 	}
 	else{		
 		
-		$authors = $authorDao->get_all();
-		$authors_count = count($authors);
-		$authors = $authorDao->get_in_range($from,$max_records);
+		$publishers = $publisherDao->get_all();
+		$publishers_count = count($publishers);
+		$publishers = $publisherDao->get_in_range($from,$max_records);
 		
 	}
-	$pages_count = ceil($authors_count/$max_records);
+	$pages_count = ceil($publishers_count/$max_records);
 	
 ?>
+<!DOCTYPE HTML>
 <html>
-<head>
-	<title>Author management</title>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="shortcut icon" type="image/x-icon" href="../../resources/images/library-icon.ico" />
-	<link rel="stylesheet" href="../styles/css/bootstrap.min.css" />
-	<link rel="stylesheet" href="../styles/bootstrap-nav-fix.css" />
-	<link rel="stylesheet" href="../styles/author-management.css" />
-	<link rel="stylesheet" href="../styles/bootstrap-form-fix.css" />
-	<link rel="stylesheet" href="../styles/page.css" />
-	<link rel="stylesheet" href="../styles/footer.css" />
-</head>
-<body>
-	
-	<nav class="navbar navbar-expand-lg nav-fix sticky-top navbar-light bg-light">
+	<head>
+		<title>Publisher management</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="shortcut icon" type="image/x-icon" href="../../resources/images/library-icon.ico" />
+		<link rel="stylesheet" href="../styles/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="../styles/bootstrap-nav-fix.css" />
+		<link rel="stylesheet" href="../styles/bootstrap-form-fix.css" />
+		<link rel="stylesheet" href="../styles/page.css" />
+		<link rel="stylesheet" href="../styles/footer.css" />
+	</head>
+	<body>
+		<nav class="navbar navbar-expand-lg nav-fix sticky-top navbar-light bg-light">
 			<a class="navbar-brand" href="javascript:void(0);"><div class="nav-logo-wrap"><div class="nav-logo"></div> <span class="nav-text">E-LIBRARY</span></div> </a>
 			<ul class="navbar-nav mr-auto">
 				<li class="nav-item">
@@ -66,11 +63,11 @@
 						Library options
 					</a>
 					<div class="dropdown-menu">
-						<a class="dropdown-item active" href="/project/interface/pages/author-management.php">Manage authors</a>
+						<a class="dropdown-item" href="/project/interface/pages/author-management.php">Manage authors</a>
 						<a class="dropdown-item" href="/project/interface/pages/book-management.php">Manage books</a>
 						<a class="dropdown-item" href="/project/interface/pages/book-copy-management.php">Manage book copies</a>					<a class="dropdown-item" href="/project/interface/pages/book-lendings-management.php">Manage book lendings</a>
 						<a class="dropdown-item" href="/project/interface/pages/membership-management.php">Manage members</a>	
-						<a class="dropdown-item" href="/project/interface/pages/publisher-management.php">Manage publishers</a>
+						<a class="dropdown-item active" href="/project/interface/pages/publisher-management.php">Manage publishers</a>
 					</div>
 				</li>
 				<li class="nav-item">
@@ -81,19 +78,23 @@
 				</li>
 			</ul>
 			<form class="form-inline my-2 my-lg-0" method="get">
-				<input class="form-control mr-sm-2" type="search" name="search-input" placeholder="Search authors by name">
+				<input class="form-control mr-sm-2" type="search" name="search-input" placeholder="Search publishers by name">
 				<button class="btn btn-outline-success my-2 my-sm-0" type="submit" name="search" value="search">Search</button>
 			</form>
 			
 		</div>
 	</nav>
 
+
+	
+
+		<!--Page body-->
 	<div class="page-body-wrap">
 		<div class="page-body">
 			<div class="body-nav">
 			<ul id="tabs">
-				<li id="tab-1" onclick="show_selected_view(this);" class="available-tab <?php $helper->print_active_tab_class() ?>"><a href="javascript:void(0);">Add author</a></li>
-				<li id="tab-2" onclick="show_selected_view(this);" class="available-tab <?php $helper->print_active_tab_class(true) ?>"><a href="javascript:void(0);">Available authors</a></li>
+				<li  id="tab-1" onclick="show_selected_view(this);" class="available-tab <?php $helper->print_active_tab_class() ?>"><a href="javascript:void(0);">Add publisher</a></li>
+				<li  id="tab-2" onclick="show_selected_view(this);" class="available-tab <?php $helper->print_active_tab_class(true) ?>"><a href="javascript:void(0);">Available publishers</a></li>
 			<ul>
 			</div>
 			<div id="views">
@@ -106,18 +107,16 @@
 							<thead>
 								<tr>
 									<th scope="col">#</th>
-									<th scope="col">First name</th>
-									<th scope="col">Last name</th>
-									<th scope="col">Short biography</th>
+									<th scope="col">Publisher name</th>
 								</tr>
 							</thead>
 							<tbody>
-								<?php foreach($authors as $author){ ?>
+								<?php foreach($publishers as $publisher){ 
+									
+								?>
 									<tr>
 										<th scope="row"><?php echo $id?></th>
-										<td><?php echo $author->get_firstname(); ?></td>
-										<td><?php echo $author->get_lastname(); ?></td>
-										<td><?php echo $helper->empty_manage($author->get_short_biography()); ?></td>
+										<td><?php echo $publisher->get_publisher_name(); ?></td>
 									</tr>
 								<?php	$id = $id + 1; 
 								} 
@@ -140,7 +139,7 @@
 								} 
 							}
 							echo " onclick=mark_page_as_active('table-nums',this);"; 
-							echo " href=author-management.php";
+							echo " href=publisher-management.php";
 							if(!isset($_GET["search"])){ 
 								echo "?page=".$i;
 							} 
@@ -158,8 +157,9 @@
 				</div>
 			</div>
 		</div>
+				
+		
 	</div>
-	
 	
 	<div class="footer-container">
 		<div class="row text-center text-xs-center text-sm-left text-md-left justify">
@@ -173,7 +173,7 @@
 							<a href="javascript:void(0);" onclick="document.getElementById('log-out').submit();">
 								Log out
 							</a>
-					</form>
+						</form>
 					</li>
 				</ul>
 			</div>
@@ -190,6 +190,5 @@
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 	<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
 	<script src="../scripts/index.js"></script>
-
 </body>
 </html>

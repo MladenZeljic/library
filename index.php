@@ -30,7 +30,7 @@
 		
 		$books = $bookDao->get_all();
 		$books_count = count($books);
-		$books = $bookDao->get_range($from,$max_records);
+		$books = $bookDao->get_in_range($from,$max_records);
 		
 	}
 	$pages_count = ceil($books_count/$max_records);
@@ -53,7 +53,7 @@
 	</head>
 	<body>
 		<nav class="navbar navbar-expand-lg nav-fix sticky-top navbar-light bg-light">
-			<a class="navbar-brand" href="javascript:void();"><div class="nav-logo-wrap"><div class="nav-logo"></div> <span class="nav-text">E-LIBRARY</span></div> </a>
+			<a class="navbar-brand" href="javascript:void(0);"><div class="nav-logo-wrap"><div class="nav-logo"></div> <span class="nav-text">E-LIBRARY</span></div> </a>
 			<ul class="navbar-nav mr-auto">
 				<li class="nav-item">
 					<a class="nav-link active" href="">Welcome<span class="sr-only">(current)</span></a>
@@ -75,94 +75,100 @@
 	<div class="page-body-wrap">
 		<div class="page-body">
 			<div class="body-nav">
-			<ul>
-				<li class="available-tab active-tab"><a href="javascript:void();">Available books</a></li>
+			<ul id="tabs">
+				<li id="tab-1" onclick="show_selected_view(this);" class="active-tab"><a href="javascript:void(0);">Available books</a></li>
 			<ul>
 			</div>
-			
-			<div class="table-container">
-				<table class="table table-striped">
-					<thead>
-						<tr>
-							<th scope="col">#</th>
-							<th scope="col">Book title</th>
-							<th scope="col">Original book title</th>
-							<th scope="col">Authors</th>
-							<th scope="col">Genres</th>
-							<th scope="col">Book category</th>
-						</tr>
-					</thead>
-					<tbody>
-						<?php foreach($books as $book){ 
-							$authors = $book->get_authors();
-							$genres = $book->get_genres();
-							$authors_string = "";
-							$genres_string = "";
-						?>
-							<tr>
-								<th scope="row"><?php echo $id?></th>
-								<td><?php echo $book->get_book_title(); ?></td>
-								<td><?php echo $book->get_original_book_title(); ?></td>
-								<td><?php $last_authors_key = count($authors) - 1;
-									  foreach ($authors as $key => $value) {
-										$authors_string = $authors_string." ".$authors[$key]->get_firstname()." ".$authors[$key]->get_lastname();
-									  	if ($key != $last_authors_key) {
-											$authors_string = $authors_string." and ";
-										}
-									  }
-									echo $helper->empty_manage($authors_string);
-									?>
-								</td>
-								<td><?php $last_genres_key = count($genres) - 1;
-									  foreach ($genres as $key => $value) {
-										$genres_string = $genres_string.$genres[$key]->get_genre_title();
-									  	if ($key != $last_genres_key) {
-											$genres_string = $genres_string." / ";
-										}
-									  }
-									echo $helper->empty_manage($genres_string);
-									?>
-								</td>
-								<td><?php echo $book->get_category()->get_category_title(); ?></td>
-							</tr>
-						<?php	$id = $id + 1; 
-						} 
-						?>
-					</tbody>
-				</table>
-				<div id="table-nums" class="table-nums"><?php
-				$i = 1;
-				echo "<span>";
-				while($i <= $pages_count){
-					echo "<a id='a".$i."' "; 
-					if(isset($_GET["page"])){ 
-						if($i==$_GET["page"]){ 
-							echo "class=page-active" ;
-						} 
-					} 
-					else{ 
-						if($i==1){ 
-							echo "class=page-active";
-						} 
-					}
-					echo " onclick=mark_page_as_active('table-nums',this);"; 
-					echo " href=index.php";
-					if(!isset($_GET["search"])){ 
-						echo "?page=".$i;
-					} 
-					else{ 
-						echo "?page=".$i."&search-input=".$_GET["search-input"]."&search=search";
-					}
-					echo ">".$i; 
-					$i = $i+1; ?>
-					</a><?php
-				}
-			?>
-				</span>
+			<div id="views">
+				<div id="tab1-view">
+					<div class="index-text-wrap">
+						<div class="index-text-title">Welcome!</div> 
+						<small>Here you can search for books that are currently available in our library. To do more please sign in or sign up.</small>
+					</div>
+					<div class="table-container">
+						<table class="table table-striped">
+							<thead>
+								<tr>
+									<th scope="col">#</th>
+									<th scope="col">Book title</th>
+									<th scope="col">Original book title</th>
+									<th scope="col">Authors</th>
+									<th scope="col">Genres</th>
+									<th scope="col">Book category</th>
+								</tr>
+							</thead>
+							<tbody>
+								<?php foreach($books as $book){ 
+									$authors = $book->get_authors();
+									$genres = $book->get_genres();
+									$authors_string = "";
+									$genres_string = "";
+								?>
+									<tr>
+										<th scope="row"><?php echo $id?></th>
+										<td><?php echo $book->get_book_title(); ?></td>
+										<td><?php echo $book->get_original_book_title(); ?></td>
+										<td><?php $last_authors_key = count($authors) - 1;
+											  foreach ($authors as $key => $value) {
+												$authors_string = $authors_string." ".$authors[$key]->get_firstname()." ".$authors[$key]->get_lastname();
+											  	if ($key != $last_authors_key) {
+													$authors_string = $authors_string." and ";
+												}
+											  }
+											echo $helper->empty_manage($authors_string);
+											?>
+										</td>
+										<td><?php $last_genres_key = count($genres) - 1;
+											  foreach ($genres as $key => $value) {
+												$genres_string = $genres_string.$genres[$key]->get_genre_title();
+											  	if ($key != $last_genres_key) {
+													$genres_string = $genres_string." / ";
+												}
+											  }
+											echo $helper->empty_manage($genres_string);
+											?>
+										</td>
+										<td><?php echo $book->get_category()->get_category_title(); ?></td>
+									</tr>
+								<?php	$id = $id + 1; 
+								} 
+								?>
+							</tbody>
+						</table>
+						<div id="table-nums" class="table-nums"><?php
+						$i = 1;
+						echo "<span>";
+						while($i <= $pages_count){
+							echo "<a id='a".$i."' "; 
+							if(isset($_GET["page"])){ 
+								if($i==$_GET["page"]){ 
+									echo "class=page-active" ;
+								} 
+							} 
+							else{ 
+								if($i==1){ 
+									echo "class=page-active";
+								} 
+							}
+							echo " onclick=mark_page_as_active('table-nums',this);"; 
+							echo " href=index.php";
+							if(!isset($_GET["search"])){ 
+								echo "?page=".$i;
+							} 
+							else{ 
+								echo "?page=".$i."&search-input=".$_GET["search-input"]."&search=search";
+							}
+							echo ">".$i; 
+							$i = $i+1; ?>
+							</a><?php
+						}
+					?>
+						</span>
+						</div>
+					</div>
 				</div>
 			</div>
-		</div>
-				
+		</div>		
 		
 	</div>
 	<div class="footer-container">
@@ -178,6 +184,6 @@
 	</div>
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 	<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
-	<script src="../scripts/index.js"></script>
+	<script src="interface/scripts/index.js"></script>
 </body>
 </html>

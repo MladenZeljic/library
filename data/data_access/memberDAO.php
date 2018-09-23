@@ -36,6 +36,73 @@
 			return $memberships;
 		}
 		
+		public function get_in_range($from, $limit){
+			$connection = $this->get_connection();
+			$sql = "SELECT * FROM member LIMIT ?,?";
+			$statement = $connection->prepare($sql);
+			$statement->bind_param("ii", $from, $limit);						
+			$statement->execute();
+			$results = $statement->get_result();
+			 
+			$memberships = array();
+			
+			if ($results->num_rows > 0) {
+				while($row = $results->fetch_assoc()) {
+					$addressDao = new addressDAO();
+					$userDao = new userDAO();
+	
+					$address = $addressDao->get_by_id($row["id_address"]);
+					$user = $userDao->get_by_id($row["id_user"]);
+					$membership = new member($row["member_phone"],$row["member_mobile"],$row["member_from"],
+								     $row["member_to"],$row["penality_points"],
+								     $row["notes"], $address, $user);
+					$membership->set_id_member($row["id_member"]);
+					array_push($memberships,$membership);
+				}
+			}
+			return $memberships;
+		}
+		
+		public function get_by_name_in_range($name,$from, $limit){
+			$connection = $this->get_connection();
+			$sql = "SELECT * FROM member INNER JOIN user ON member.id_user = user.id_user WHERE user.firstname LIKE ? OR user.lastname LIKE ? LIMIT ?,?";
+			$statement = $connection->prepare($sql);
+			$like = "%".$name."%";
+			$statement->bind_param("ssii",$like, $like, $from, $limit);			
+			$statement->execute();
+			$results = $statement->get_result();
+			 
+			$memberships = array();
+			
+			if ($results->num_rows > 0) {
+				while($row = $results->fetch_assoc()) {
+					$addressDao = new addressDAO();
+					$userDao = new userDAO();
+	
+					$address = $addressDao->get_by_id($row["id_address"]);
+					$user = $userDao->get_by_id($row["id_user"]);
+					$membership = new member($row["member_phone"],$row["member_mobile"],$row["member_from"],
+								     $row["member_to"],$row["penality_points"],
+								     $row["notes"], $address, $user);
+					$membership->set_id_member($row["id_member"]);
+					array_push($memberships,$membership);
+				}
+			}
+			return $memberships;
+		}
+		
+		public function count_by_name($name){
+			$connection = $this->get_connection();
+			$sql = "SELECT COUNT(*) FROM member INNER JOIN user ON member.id_user = user.id_user WHERE user.firstname LIKE ? OR user.lastname LIKE ?";
+			$statement = $connection->prepare($sql);
+			$like = "%".$name."%";
+			$statement->bind_param("ss",$like, $like);			
+			$statement->execute();
+			$count_result = $statement->get_result();
+			$count_row = $count_result->fetch_assoc();
+			return $count_row['COUNT(*)'];	
+		}
+		
 		public function get_by_id($id){
 			
 			$connection = $this->get_connection();
@@ -74,9 +141,8 @@
 			
 			if ($result->num_rows == 1) {
 				$row = $result->fetch_assoc();
-				$user = new user($row["firstname"],$row["lastname"],$row["date_of_birth"],$row["username"],
-								 $row["e_mail"],$row["password"],$row["approval"],$row["admin"],$row["status"]);
-				$user->set_id_user($row["id_user"]);
+				$userDao = new userDAO();
+				$user = $userDao->get_by_id($row["id_user"]);
 				$addressDao = new addressDAO();
 				
 				$address = $addressDao->get_by_id($row["id_address"]);

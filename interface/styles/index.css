@@ -6,3 +6,12 @@
 a{
 	outline: none;
 }
+.index-text-wrap{
+	text-align: center;
+	padding: 2%;
+}
+.index-text-title{
+	font-size: 25px;
+	font-weight: 900;
+	padding-bottom: 20px;
+}

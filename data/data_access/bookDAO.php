@@ -59,7 +59,7 @@
 			return $books;
 		}
 		
-		public function get_range($from, $limit){
+		public function get_in_range($from, $limit){
 			
 			$connection = $this->get_connection();
 			$book_sql = "SELECT * FROM book INNER JOIN category ON book.id_category = category.id_category LIMIT ?,?";

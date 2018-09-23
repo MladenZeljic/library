@@ -27,6 +27,62 @@
 			return $addresses;
 		}
 		
+		public function get_in_range($from, $limit){
+			$connection = $this->get_connection();
+			$sql = "SELECT * FROM address LIMIT ?,?";
+			$statement = $connection->prepare($sql);
+			$statement->bind_param("ii", $from, $limit);
+			$statement->execute();
+			$results = $statement->get_result();
+			 
+			$addresses = array();
+			
+			if ($results->num_rows > 0) {
+				while($row = $results->fetch_assoc()) {
+					
+					$address = new address($row["zip_code"],$row["street_address"],$row["city"]);
+					$address->set_id_address($row["id_address"]);
+					array_push($addresses,$address);
+				}
+			}
+			return $addresses;
+		}
+		
+		public function get_by_param_in_range($param ,$from, $limit){
+			$connection = $this->get_connection();
+			$sql = "SELECT * FROM address WHERE street_name LIKE ? OR city LIKE ? LIMIT ?,?";
+			$statement = $connection->prepare($sql);
+			$like = "%".$param."%";
+			$statement->bind_param("ssii", $like, $like, $from, $limit);			
+			$statement->execute();
+			$results = $statement->get_result();
+			 
+			$addresses = array();
+			
+			if ($results->num_rows > 0) {
+				while($row = $results->fetch_assoc()) {
+					
+					$address = new address($row["zip_code"],$row["street_address"],$row["city"]);
+					$address->set_id_address($row["id_address"]);
+					array_push($addresses,$address);
+				}
+			}
+			return $addresses;
+		}
+		
+		public function count_by_param($param){
+			
+			$connection = $this->get_connection();
+			$sql = "SELECT COUNT (*) FROM address WHERE street_name LIKE ? OR city LIKE ?";
+			$statement = $connection->prepare($sql);
+			$like = "%".$param."%";
+			$statement->bind_param("ss", $like, $like);			
+			$statement->execute();
+			$count_result = $statement->get_result();
+			$count_row = $count_result->fetch_assoc();
+			return $count_row['COUNT(*)'];	
+		}
+		
 		public function get_by_id($id){
 			
 			$connection = $this->get_connection();

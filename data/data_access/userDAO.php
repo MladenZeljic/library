@@ -11,7 +11,10 @@
 			
 			$connection = $this->get_connection();
 			$sql = "SELECT * FROM user";
-			$results = $connection->query($sql);
+			$statement = $connection->prepare($sql);
+			$statement->execute();
+			$results = $statement->get_result();			
+			
 			$users = array();
 			$roleDao = new roleDAO();
 			
@@ -94,6 +97,66 @@
 				return $user;
 			}
 			return null;
+		}
+
+		public function get_in_range($from, $limit){
+			$connection = $this->get_connection();
+			$sql = "SELECT * FROM user ORDER BY approval,status LIMIT ?,?";
+			$statement = $connection->prepare($sql);
+			$statement->bind_param("ii", $from, $limit);
+			$statement->execute();
+			$results = $statement->get_result();			
+			
+			$users = array();
+			$roleDao = new roleDAO();
+			
+			if ($results->num_rows > 0) {
+				while($row = $results->fetch_assoc()) {
+					$role = $roleDao->get_by_id($row["id_role"]);
+					$user = new user($row["firstname"],$row["lastname"],$row["date_of_birth"], $row["e_mail"],
+					$row["username"],$row["password"],$row["approval"],$row["status"],$role);
+					$user->set_id_user($row["id_user"]);
+					array_push($users,$user);
+				}
+			}
+			return $users;
+		}
+		
+		public function get_by_param_in_range($param ,$from, $limit){
+			$connection = $this->get_connection();
+			$sql = "SELECT * FROM user WHERE user.firstname LIKE ? OR user.lastname LIKE ? OR user.username LIKE ? OR user.e_mail LIKE ? ORDER BY approval,status LIMIT ?,?";
+			$statement = $connection->prepare($sql);
+			$like = "%".$param."%";			
+			$statement->bind_param("ssssii", $like, $like, $like, $like, $from, $limit);
+			$statement->execute();
+			$results = $statement->get_result();			
+			
+			$users = array();
+			$roleDao = new roleDAO();
+			
+			if ($results->num_rows > 0) {
+				while($row = $results->fetch_assoc()) {
+					$role = $roleDao->get_by_id($row["id_role"]);
+					$user = new user($row["firstname"],$row["lastname"],$row["date_of_birth"], $row["e_mail"],
+					$row["username"],$row["password"],$row["approval"],$row["status"],$role);
+					$user->set_id_user($row["id_user"]);
+					array_push($users,$user);
+				}
+			}
+			return $users;
+		}
+		
+		public function count_by_param($param){
+			$connection = $this->get_connection();
+			$sql = "SELECT COUNT(*) FROM user WHERE user.firstname LIKE ? OR user.lastname LIKE ? OR user.username LIKE ? OR user.e_mail LIKE ?";
+			$statement = $connection->prepare($sql);
+			$like = "%".$param."%";
+			$statement->bind_param("ssss", $like, $like, $like, $like);			
+			$statement->execute();
+			$count_result = $statement->get_result();
+			$count_row = $count_result->fetch_assoc();
+			return $count_row['COUNT(*)'];	
+		
 		}
 		
 		public function insert($object){

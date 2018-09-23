@@ -32,7 +32,7 @@
 				}
 				else{
 					//else redirect user back to login
-					$message = "You have entered wrong username or password!";
+					$message = "You have entered wrong username or password! Check if your caps lock is turned off or if you entered your username and password correctly!";
 					echo '<script>alert("'.$message.'");</script>';
 					//$helper->redirect("http://localhost/project/");
 									
@@ -42,7 +42,7 @@
 			else{
 				//else user wants to register 
 				if(isset($_POST["register"])){
-					$message = "Registration was successfull!";
+					$message = "Registration was successfull! You'll need to wait until our administrators approve your account.";
 					$firstname = $_POST["firstname-input"];
 					$lastname = $_POST["lastname-input"];
 					$username = $_POST["username-input"];

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Sep 21, 2018 at 06:28 PM
+-- Generation Time: Sep 23, 2018 at 08:23 PM
 -- Server version: 10.1.35-MariaDB
 -- PHP Version: 7.2.9
 
@@ -178,10 +178,7 @@ CREATE TABLE `book_lend` (
 --
 
 INSERT INTO `book_lend` (`id_lend`, `lend_date`, `return_date`, `approved`, `id_book_copy`, `id_member`) VALUES
-(2, '2018-09-10', '2018-09-20', 0, 1, 1),
-(3, '2018-09-10', '2018-09-20', 0, 1, 1),
-(4, '2018-09-10', '2018-09-20', 0, 1, 1),
-(5, '2018-09-10', '2018-09-20', 0, 1, 1);
+(2, '2018-09-10', '2018-09-20', 1, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -245,7 +242,7 @@ CREATE TABLE `member` (
 --
 
 INSERT INTO `member` (`id_member`, `member_phone`, `member_mobile`, `member_from`, `member_to`, `penality_points`, `notes`, `id_address`, `id_user`) VALUES
-(1, '055/258-741', '065/858-965', '2017-11-10', '2018-11-10', 4, 'notes', 1, 2);
+(1, '055/258-741', '065/858-965', '2017-11-10', '2018-11-10', 4, 'note', 1, 4);
 
 -- --------------------------------------------------------
 
@@ -296,7 +293,7 @@ INSERT INTO `role` (`id_role`, `role_title`) VALUES
 
 CREATE TABLE `user` (
   `id_user` int(11) NOT NULL,
-  `firstname` text COLLATE utf32_croatian_ci NOT NULL,
+  `firstname` varchar(255) COLLATE utf32_croatian_ci NOT NULL,
   `lastname` varchar(255) COLLATE utf32_croatian_ci NOT NULL,
   `date_of_birth` date NOT NULL,
   `e_mail` varchar(50) COLLATE utf32_croatian_ci NOT NULL,
@@ -316,7 +313,8 @@ INSERT INTO `user` (`id_user`, `firstname`, `lastname`, `date_of_birth`, `e_mail
 (2, 'Firstname', 'Lastname', '1990-09-03', 'mail@mial.com', 'user', '$2y$10$.Fznhy92sSi8DsGa5qNHHOqI6KiVbEhDYXUp.EsDexR7uHP0QOBbq', 1, 1, 2),
 (4, 'Myname', 'Mylastname', '1920-09-05', 'mymail@mail.com', 'myuser', '$2y$10$PQAn9MA24.FHgQSlBscHKOARal2RnxZcwSpqTWESSciD4dSxhpN32', 1, 1, 3),
 (5, 'fasdfsd', 'fsafsa', '2018-09-03', 'fasfas@mail.vo', 'username', '$2y$10$RD8Lm7Ca9IHWZhD2abEP5eyXQsTb4Yr8baIcEht57XAAbNvj8R1mu', 0, 1, 3),
-(6, 'Firstname', 'Lastname', '2018-09-06', 'email@mail.ba', 'usernm', '$2y$10$P6FlBC3ENxnbdZT5wjEpuOC0.r0/dYHI08iTa.vm/XjXpX9eQz29q', 0, 1, 3);
+(6, 'Firstname', 'Lastname', '2018-09-06', 'email@mail.ba', 'usernm', '$2y$10$P6FlBC3ENxnbdZT5wjEpuOC0.r0/dYHI08iTa.vm/XjXpX9eQz29q', 0, 1, 3),
+(7, 'Firstname', 'Lastname', '2018-09-13', 'mail@mail.ba', 'usrnm', 'pass', 0, 1, 3);
 
 --
 -- Indexes for dumped tables
@@ -483,7 +481,7 @@ ALTER TABLE `role`
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id_user` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id_user` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- Constraints for dumped tables

@@ -36,6 +36,74 @@
 			return $book_copies;
 		}
 		
+		public function get_in_range($from, $limit){
+			
+			$connection = $this->get_connection();
+			$sql = "SELECT * FROM book_copy ORDER BY available DESC LIMIT ?,?";
+			$statement = $connection->prepare($sql);
+			$statement->bind_param("ii", $from, $limit);
+			$statement->execute();
+			$results = $statement->get_result();
+			 
+			$book_copies = array();
+			
+			if ($results->num_rows > 0) {
+				while($row = $results->fetch_assoc()) {
+					$bookDao = new bookDAO();
+					$publisherDao = new publisherDAO();
+	
+					$book = $bookDao->get_by_id($row["id_book"]);
+					$publisher = $publisherDao->get_by_id($row["id_publisher"]);
+					$book_copy = new book_copy($row["year_of_publication"],$row["number_of_pages"],
+								   $row["available"], $book, $publisher);
+					$book_copy->set_id_book_copy($row["id_book_copy"]);
+					array_push($book_copies,$book_copy);
+				}
+			}
+			return $book_copies;
+		}
+		
+		public function get_by_title_in_range($title ,$from, $limit){
+			$connection = $this->get_connection();
+			$sql = "SELECT * FROM book_copy INNER JOIN book ON book_copy.id_book = book.id_book WHERE book.book_title LIKE ? ORDER BY available DESC LIMIT ?,?";
+			$statement = $connection->prepare($sql);
+			$like = "%".$title."%";
+			$statement->bind_param("sii", $like, $from, $limit);
+			$statement->execute();
+			$results = $statement->get_result();
+			 
+			$book_copies = array();
+			
+			if ($results->num_rows > 0) {
+				while($row = $results->fetch_assoc()) {
+					$bookDao = new bookDAO();
+					$publisherDao = new publisherDAO();
+	
+					$book = $bookDao->get_by_id($row["id_book"]);
+					$publisher = $publisherDao->get_by_id($row["id_publisher"]);
+					$book_copy = new book_copy($row["year_of_publication"],$row["number_of_pages"],
+								   $row["available"], $book, $publisher);
+					$book_copy->set_id_book_copy($row["id_book_copy"]);
+					array_push($book_copies,$book_copy);
+				}
+			}
+			return $book_copies;
+		}
+		
+		public function count_by_title($title){
+			$connection = $this->get_connection();
+			$sql = "SELECT COUNT(*) FROM book_copy INNER JOIN book ON book_copy.id_book = book.id_book WHERE book.book_title LIKE ?";
+			$statement = $connection->prepare($sql);
+			$like = "%".$title."%";
+			$statement->bind_param("s", $like);			
+			$statement->execute();
+			$count_result = $statement->get_result();
+			$count_row = $count_result->fetch_assoc();
+			return $count_row['COUNT(*)'];	
+		
+		
+		}
+		
 		public function get_by_id($id){
 			
 			$connection = $this->get_connection();

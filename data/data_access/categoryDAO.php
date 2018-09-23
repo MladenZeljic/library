@@ -27,6 +27,61 @@
 			return $categories;
 		}
 		
+		public function get_in_range($from, $limit){
+			$connection = $this->get_connection();
+			$sql = "SELECT * FROM category LIMIT ?,?";
+			$statement = $connection->prepare($sql);
+			$statement->bind_param("ii", $from, $limit);						
+			$statement->execute();
+			$results = $statement->get_result();
+			 
+			$categories = array();
+			
+			if ($results->num_rows > 0) {
+				while($row = $results->fetch_assoc()) {
+					
+					$category = new category($row["category_title"]);
+					$category->set_id_category($row["id_category"]);
+					array_push($categories,$category);
+				}
+			}
+			return $categories;
+		}
+		
+		public function get_by_name_in_range($name ,$from, $limit){
+			$connection = $this->get_connection();
+			$sql = "SELECT * FROM category WHERE category_title LIKE ? LIMIT ?,?";
+			$statement = $connection->prepare($sql);
+			$like = "%".$name."%";
+			$statement->bind_param("sii", $like, $from, $limit);						
+			$statement->execute();
+			$results = $statement->get_result();
+			 
+			$categories = array();
+			
+			if ($results->num_rows > 0) {
+				while($row = $results->fetch_assoc()) {
+					
+					$category = new category($row["category_title"]);
+					$category->set_id_category($row["id_category"]);
+					array_push($categories,$category);
+				}
+			}
+			return $categories;
+		}
+		
+		public function count_by_name($name){
+			$connection = $this->get_connection();
+			$sql = "SELECT COUNT(*) FROM category WHERE category_title LIKE ? ";
+			$statement = $connection->prepare($sql);
+			$like = "%".$name."%";
+			$statement->bind_param("s",$like);			
+			$statement->execute();
+			$count_result = $statement->get_result();
+			$count_row = $count_result->fetch_assoc();
+			return $count_row['COUNT(*)'];	
+		}
+		
 		public function get_by_id($id){
 			
 			$connection = $this->get_connection();

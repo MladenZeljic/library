@@ -1,6 +1,5 @@
 function show_password(){
 	var password_input = document.getElementById("log-password-input");
-	console.log(password_input);
 	if (password_input.type === "password") {
 		password_input.type = "text";
 	} 
@@ -8,29 +7,41 @@ function show_password(){
 		password_input.type = "password";
 	}
 }
-function fade_register(){
-	console.log("A");
-	var login_form = document.getElementById("login-form");
-	var register_form = document.getElementById("register-form");
+
+function fade_element(elementIdFromFade,elementIdToFade){
+	var fading_element = document.getElementById(elementIdFromFade);
+	var replacing_element = document.getElementById(elementIdToFade);
 	
-	register_form.classList.add("fade");	
+	fading_element.classList.add("fade");
 	setTimeout(function(){
-		login_form.classList.remove("fade");
-		login_form.classList.remove("form-hide");
-		register_form.classList.add("form-hide");
-	},200);	
-			
-}
-function fade_login(){
-	var login_form = document.getElementById("login-form");
-	var register_form = document.getElementById("register-form");
-	
-	login_form.classList.add("fade");
-	setTimeout(function(){
-		register_form.classList.remove("fade");
-		login_form.classList.add("form-hide");	
-		register_form.classList.remove("form-hide");
+		replacing_element.classList.remove("fade");
+		replacing_element.classList.remove("form-hide");
+		fading_element.classList.add("form-hide");
 	},200);
+}
+function show_selected_view(element){
+	
+	var views=document.getElementById("views").children;
+	var tabs=document.getElementById("tabs").getElementsByTagName('li');
+	var numberOfTabs=tabs.length;
+	var numberOfViews=views.length;
+	if(numberOfTabs==numberOfViews){
+		for(var i=0;i<numberOfViews;i++){
+			tabs[i].classList.remove('active-tab');
+			views[i].classList.remove('tab-view-hide');
+			views[i].classList.add('tab-view-hide');
+		}
+		for(var i=0;i<numberOfTabs;i++){
+			if(element.id===tabs[i].id){
+				views[i].classList.remove('tab-view-hide');
+				element.classList.add('active-tab');
+				break;
+			}
+		}
+	}
+	else{
+		alert("Bad HTML: Tab or tab view missing!");
+	}
 }
 function validate_form(form){
 	
