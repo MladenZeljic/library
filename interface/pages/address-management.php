@@ -60,7 +60,7 @@
 				
 				<!--There are only admin options on this page, because only admin can access this page-->
 				<li class="nav-item dropdown">
-					<a class="nav-link dropdown-toggle" href="javascript:void(0);" id="navbarAdminDropdown" role="button" data-toggle="dropdown">
+					<a class="nav-link dropdown-toggle active" href="javascript:void(0);" id="navbarAdminDropdown" role="button" data-toggle="dropdown">
 						Admin options
 					</a>
 					<div class="dropdown-menu">
@@ -77,6 +77,11 @@
 					</form>
 				</li>
 			</ul>
+			<form class="form-inline my-2 my-lg-0" method="get" onsubmit="return false;">
+				<input class="form-control mr-sm-2" id="search-input" type="search" name="search-input" placeholder="Search address by street and city">
+				<button class="btn btn-outline-success my-2 my-sm-0" type="button" onclick="do_search('address-management.php','search-input');" name="search" value="search">Search</button>
+			</form>
+			
 			
 		</div>
 	</nav>
@@ -86,17 +91,53 @@
 		<div class="page-body">
 			<div class="body-nav">
 			<ul id="tabs">
-				<li  id="tab-1" onclick="show_selected_view(this);" class="available-tab <?php $helper->print_active_tab_class() ?>"><a href="javascript:void(0);">Add address</a></li>
-				<li  id="tab-2" onclick="show_selected_view(this);" class="available-tab <?php $helper->print_active_tab_class(true) ?>"><a href="javascript:void(0);">Available addresses</a></li>
-			<ul>
+				<li  id="tab-1" onclick="show_selected_view(this);" class="active-tab"><a href="javascript:void(0);">Add address</a></li>
+				<li  id="tab-2" onclick="show_selected_view(this);" ><a href="javascript:void(0);">Available addresses</a></li>
+			</ul>
 			</div>
 			<div id="views">
-				<div id="tab1-view" class="<?php $helper->print_hide_view_class(); ?>" >
+				<div id="tab1-view" >
+					<div class="user-form-wrap">
+						<form id="address-form" class="user-form" method="post" onsubmit="return false;" action="">
+							<div class="form-section left-section">
+								<div class="form-group">
+									<label class="control-label col-sm-2 user-col-fix" for="street-input">Street address</label>
+									<div class="col-sm-10 user-col-fix">
+										<input type="text" class="form-control" id="street-input" name="street-input" placeholder="Enter street address">
+										<span></span>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="control-label col-sm-2 user-col-fix" for="city-input">City name</label>
+									<div class="col-sm-10 user-col-fix">
+										<input type="text" class="form-control" id="city-input" name="city-input" placeholder="Enter city name">
+										<span></span>
+									</div>
+								</div>
+							</div>
+							<div class="form-section">
+								<div class="form-group">
+									<label class="control-label col-sm-2 user-col-fix" for="zip-input">Zip-code</label>
+									<div class="col-sm-10 user-col-fix">
+										<input type="text" class="form-control" id="zip-input" name="zip-input" placeholder="Enter zip code">
+										<span></span>
+									</div>
+								</div>
+							</div>
+							<div class="clear"></div>
+							<div class="form-group">        
+								<div class="col-sm-offset-2 col-sm-10 user-form-button-wrap">
+									<button type="button" onclick="validateAndSendAddressForm('address-form')" class="btn btn-primary form-button" name="save" value="save">Save</button>
+								</div>
+							</div>
+							
+						</form>
+					</div>
 				</div>
-				<div id="tab2-view" class="<?php $helper->print_hide_view_class(true); ?>" >
+				<div id="tab2-view" class="tab-view-hide" >
 			
-					<div class="table-container">
-						<table class="table table-striped">
+					<div id="datagrid" class="table-container">
+						<table id="table" class="table table-striped">
 							<thead>
 								<tr>
 									<th scope="col">#</th>
@@ -122,41 +163,37 @@
 							</tbody>
 						</table>
 						<div id="table-nums" class="table-nums"><?php
-						$i = 1;
-						echo "<span>";
-						while($i <= $pages_count){
-							echo "<a id='a".$i."' "; 
-							if(isset($_GET["page"])){ 
-								if($i==$_GET["page"]){ 
-									echo "class=page-active" ;
+							$i = 1;
+							echo "<span>";
+							while($i <= $pages_count){
+								echo "<a id='a".$i."' "; 
+								if(isset($_GET["page"])){ 
+									if($i==$_GET["page"]){ 
+										echo "class=page-active" ;
+									} 
 								} 
-							} 
-							else{ 
-								if($i==1){ 
-									echo "class=page-active";
+								else{ 
+									if($i==1){ 
+										echo "class=page-active";
+									}
+								}
+								if(!isset($_GET["search"])){ 
+									echo " onclick=mark_page_as_active('table-nums',this);change_page('address-management.php',{$i},null,null);";
 								} 
+								else{
+									echo " onclick=mark_page_as_active('table-nums',this);change_page('address-management.php',{$i},'{$_GET["search-input"]}','search');"; 
+								}
+								echo ' href="javascript:void(0);">'.$i; 
+								$i = $i+1; ?>
+								</a><?php
 							}
-							echo " onclick=mark_page_as_active('table-nums',this);"; 
-							echo " href=address-management.php";
-							if(!isset($_GET["search"])){ 
-								echo "?page=".$i;
-							} 
-							else{ 
-								echo "?page=".$i."&search-input=".$_GET["search-input"]."&search=search";
-							}
-							echo ">".$i; 
-							$i = $i+1; ?>
-							</a><?php
-						}
-					?>
-						</span>
+							?>
+							</span>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-				
-		
 	</div>
 	
 	<div class="footer-container">
@@ -188,5 +225,6 @@
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 	<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
 	<script src="../scripts/index.js"></script>
+	<script src="../scripts/address-script.js"></script>
 </body>
 </html>

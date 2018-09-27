@@ -50,7 +50,7 @@
 		
 		public function get_by_param_in_range($param ,$from, $limit){
 			$connection = $this->get_connection();
-			$sql = "SELECT * FROM address WHERE street_name LIKE ? OR city LIKE ? LIMIT ?,?";
+			$sql = "SELECT * FROM address WHERE street_address LIKE ? OR city LIKE ? LIMIT ?,?";
 			$statement = $connection->prepare($sql);
 			$like = "%".$param."%";
 			$statement->bind_param("ssii", $like, $like, $from, $limit);			
@@ -73,7 +73,7 @@
 		public function count_by_param($param){
 			
 			$connection = $this->get_connection();
-			$sql = "SELECT COUNT (*) FROM address WHERE street_name LIKE ? OR city LIKE ?";
+			$sql = "SELECT COUNT(*) FROM address WHERE street_address LIKE ? OR city LIKE ? ";
 			$statement = $connection->prepare($sql);
 			$like = "%".$param."%";
 			$statement->bind_param("ss", $like, $like);			
@@ -110,20 +110,24 @@
 			$statement = $connection->prepare($sql);
 			$statement->bind_param("i",$zip_code);
 			$statement->execute();
-			$result = $statement->get_result();
+			$results = $statement->get_result();
 			
-			if ($result->num_rows == 1) {
-				$row = $result->fetch_assoc();
-				$address = new address($row["zip_code"],$row["street_address"],$row["city"]);
-				$address->set_id_address($row["id_address"]);
-				return $address;
+			$addresses = array();
+			
+			if ($results->num_rows > 0) {
+				while($row = $results->fetch_assoc()) {
+					
+					$address = new address($row["zip_code"],$row["street_address"],$row["city"]);
+					$address->set_id_address($row["id_address"]);
+					array_push($addresses,$address);
+				}
 			}
-			return null;
+			return $addresses;
 		}
 		
 		public function insert($object){
 			
-			$db_object = $this->get_by_zip_code($object->get_zip_code());
+			$db_object = $this->get_by_id($object->get_id_address());
 			
 			if(!$db_object){
 				$connection = $this->get_connection();
@@ -147,7 +151,7 @@
 		
 		public function update($old_object, $new_object){
 			
-			$db_object = $this->get_by_zip_code($old_object->get_zip_code());
+			$db_object = $this->get_by_id($old_object->get_id_address());
 			
 			if($db_object){
 				$connection = $this->get_connection();
@@ -169,7 +173,7 @@
 		}
 		
 		public function delete($object){
-			$db_object = $this->get_by_zip_code($object->get_zip_code());
+			$db_object = $this->get_by_id($object->get_id_address());
 			
 			if($db_object){
 				$connection = $this->get_connection();

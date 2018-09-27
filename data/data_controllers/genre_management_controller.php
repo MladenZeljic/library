@@ -1,6 +1,7 @@
 <?php
 	require_once __DIR__.'/basic_controller.php';
 	require_once __DIR__.'/../data_helpers/helpers.php';
+	include_once __DIR__.'/../data_access/genreDAO.php';
 	include_once __DIR__.'/../data_access/userDAO.php';
 	
 
@@ -14,6 +15,15 @@
 				$helper->redirect("http://localhost/project/");
 			}
 			else{
+				$genreDao = new genreDAO();
+				
+				$genre = new genre($_POST['genre-name-input']);
+				$message = 'Genre insertion was successfull!';
+				if(!$genreDao->insert($genre)){
+					$message = 'Genre insertion was not successfull!';
+				}
+				echo "<span id='message'>'{$message}'</span>";
+				
 				//...
 			}			
 			

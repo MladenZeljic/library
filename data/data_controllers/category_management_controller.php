@@ -1,6 +1,7 @@
 <?php
 	require_once __DIR__.'/basic_controller.php';
 	require_once __DIR__.'/../data_helpers/helpers.php';
+	include_once __DIR__.'/../data_access/categoryDAO.php';
 	include_once __DIR__.'/../data_access/userDAO.php';
 	
 
@@ -14,6 +15,15 @@
 				$helper->redirect("http://localhost/project/");
 			}
 			else{
+				$categoryDao = new categoryDAO();
+				
+				$category = new category($_POST['category-name-input']);
+				$message = 'Category insertion was successfull!';
+				if(!$categoryDao->insert($category)){
+					$message = 'Category insertion was not successfull!';
+				}
+				echo "<span id='message'>'{$message}'</span>";
+				
 				//...
 			}			
 			

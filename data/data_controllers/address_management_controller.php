@@ -15,6 +15,15 @@
 				$helper->redirect("http://localhost/project/");
 			}
 			else{
+				$addressDao = new addressDAO();
+				
+				$address = new address($_POST['zip-input'], $_POST['street-input'], $_POST['city-input']);
+				$message = 'Address insertion was successfull!';
+				if(!$addressDao->insert($address)){
+					$message = 'Address insertion was not successfull!';
+				}
+				echo "<span id='message'>'{$message}'</span>";
+				
 				//...
 			}			
 			

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Sep 23, 2018 at 08:23 PM
+-- Generation Time: Sep 27, 2018 at 09:56 PM
 -- Server version: 10.1.35-MariaDB
 -- PHP Version: 7.2.9
 
@@ -41,7 +41,14 @@ CREATE TABLE `address` (
 
 INSERT INTO `address` (`id_address`, `zip_code`, `street_address`, `city`) VALUES
 (1, 75249, 'pribojska b.b.', 'Priboj'),
-(2, 75000, 'Husinskih rudara', 'Tuzla');
+(2, 75000, 'Husinskih rudara', 'Tuzla'),
+(3, 76300, 'RaÄanska', 'Bijeljina'),
+(4, 76300, 'MajeviÄka', 'Bijeljina'),
+(25, 423423, 'fasdfsadka', 'fasfas'),
+(26, 765765, 'rewrwka', 'tsdg'),
+(27, 534, 'rewtwka', 'fasfas'),
+(28, 67456, 'sdfds', 'dasdas'),
+(29, 5453, 'gsdgsd', 'fasfasf');
 
 -- --------------------------------------------------------
 
@@ -62,9 +69,12 @@ CREATE TABLE `author` (
 --
 
 INSERT INTO `author` (`id_author`, `firstname`, `lastname`, `date_of_birth`, `short_biography`) VALUES
-(7, 'Name', 'Lastname', '2018-09-19', ''),
-(12, 'First', 'Last', '1968-11-10', 'fjsa'),
-(13, 'author', 'mcauthor', '1986-10-10', 'short');
+(7, 'Osman', 'Abbas', '1974-03-10', ''),
+(12, 'Joanne', 'Rowling', '1965-07-31', 'Joanne Rowling, writing under the pen names J. K. Rowling and Robert Galbraith, is a British novelist, philanthropist, film producer, television producer and screenwriter, best known for writing the Harry Potter fantasy series.'),
+(13, 'Jack', 'Thorne', '1978-12-06', 'Jack Thorne is an English screenwriter and playwright. '),
+(14, 'John', 'Tiffany', '1971-06-27', 'John Richard Tiffany is an English theatre director. '),
+(15, 'Agatha', 'Christie', '1890-09-15', 'Dame Agatha Mary Clarissa Christie was an English writer known for her 66 detective novels and 14 short story collections, particularly those revolving around her fictional detectives Hercule Poirot and Miss Marple.'),
+(16, 'George', 'Martin', '1948-09-20', 'George Raymond Richard Martin, also known as GRRM, is an American novelist and short-story writer in the fantasy, horror, and science fiction genres, screenwriter, and television producer. He is best known for his series of epic fantasy novels, A Song of Ice and Fire, which was later adapted into the HBO series Game of Thrones.');
 
 -- --------------------------------------------------------
 
@@ -84,12 +94,11 @@ CREATE TABLE `book` (
 --
 
 INSERT INTO `book` (`id_book`, `book_title`, `original_book_title`, `id_category`) VALUES
-(9, 'Knjiga1', 'Book1', 1),
-(10, 'Knjiga2', 'Book2', 1),
-(11, 'Knjiga3', 'Book3', 1),
-(12, 'Knjiga4', 'Book4', 1),
-(13, 'Knjiga5', 'Book5', 2),
-(14, 'Knjiga6', 'Book6', 2);
+(9, 'The rule of data mining in information security', 'The rule of data mining in information security', 5),
+(10, 'Harry Potter and the Deathy Hallows', 'Harry Potter and the Deathy Hallows', 6),
+(11, 'Harry Potter and the Cursed Child', 'Harry Potter and the Cursed Child', 6),
+(12, 'Hallowe\'en Party', 'Hallowe\'en Party', 6),
+(13, 'A storm of swords', 'A storm of swords', 6);
 
 -- --------------------------------------------------------
 
@@ -108,13 +117,12 @@ CREATE TABLE `book_author` (
 
 INSERT INTO `book_author` (`id_book`, `id_author`) VALUES
 (9, 7),
-(9, 12),
-(10, 7),
 (10, 12),
-(11, 7),
 (11, 12),
-(12, 7),
-(12, 13);
+(11, 13),
+(11, 14),
+(12, 15),
+(13, 16);
 
 -- --------------------------------------------------------
 
@@ -154,9 +162,12 @@ CREATE TABLE `book_genre` (
 --
 
 INSERT INTO `book_genre` (`id_book`, `id_genre`) VALUES
-(10, 1),
-(10, 2),
-(12, 4);
+(10, 5),
+(10, 10),
+(12, 4),
+(13, 4),
+(13, 5),
+(13, 10);
 
 -- --------------------------------------------------------
 
@@ -196,8 +207,15 @@ CREATE TABLE `category` (
 --
 
 INSERT INTO `category` (`id_category`, `category_title`) VALUES
-(1, 'kat1'),
-(2, 'kat2');
+(1, 'Encyclopedia'),
+(2, 'Journal'),
+(3, 'Newspaper'),
+(4, 'Article'),
+(5, 'Scientific paper'),
+(6, 'Novel'),
+(7, 'School book'),
+(8, 'Novelette'),
+(9, 'Comic');
 
 -- --------------------------------------------------------
 
@@ -217,7 +235,13 @@ CREATE TABLE `genre` (
 INSERT INTO `genre` (`id_genre`, `genre_title`) VALUES
 (1, 'Horror'),
 (2, 'Comedy'),
-(4, 'Drama');
+(4, 'Drama'),
+(5, 'Science fiction'),
+(6, 'Action'),
+(7, 'Mystery'),
+(8, 'Satire'),
+(9, 'Tragedy'),
+(10, 'Fantasy');
 
 -- --------------------------------------------------------
 
@@ -242,7 +266,7 @@ CREATE TABLE `member` (
 --
 
 INSERT INTO `member` (`id_member`, `member_phone`, `member_mobile`, `member_from`, `member_to`, `penality_points`, `notes`, `id_address`, `id_user`) VALUES
-(1, '055/258-741', '065/858-965', '2017-11-10', '2018-11-10', 4, 'note', 1, 4);
+(1, '055/258-741', '065/858-965', '2017-11-10', '2018-11-10', 4, 'note', 2, 4);
 
 -- --------------------------------------------------------
 
@@ -309,12 +333,12 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`id_user`, `firstname`, `lastname`, `date_of_birth`, `e_mail`, `username`, `password`, `approval`, `status`, `id_role`) VALUES
-(1, 'Firstname', 'Lastname', '1998-10-11', 'mail@mail.com', 'uname', '$2y$10$.Fznhy92sSi8DsGa5qNHHOqI6KiVbEhDYXUp.EsDexR7uHP0QOBbq', 1, 1, 1),
-(2, 'Firstname', 'Lastname', '1990-09-03', 'mail@mial.com', 'user', '$2y$10$.Fznhy92sSi8DsGa5qNHHOqI6KiVbEhDYXUp.EsDexR7uHP0QOBbq', 1, 1, 2),
-(4, 'Myname', 'Mylastname', '1920-09-05', 'mymail@mail.com', 'myuser', '$2y$10$PQAn9MA24.FHgQSlBscHKOARal2RnxZcwSpqTWESSciD4dSxhpN32', 1, 1, 3),
-(5, 'fasdfsd', 'fsafsa', '2018-09-03', 'fasfas@mail.vo', 'username', '$2y$10$RD8Lm7Ca9IHWZhD2abEP5eyXQsTb4Yr8baIcEht57XAAbNvj8R1mu', 0, 1, 3),
-(6, 'Firstname', 'Lastname', '2018-09-06', 'email@mail.ba', 'usernm', '$2y$10$P6FlBC3ENxnbdZT5wjEpuOC0.r0/dYHI08iTa.vm/XjXpX9eQz29q', 0, 1, 3),
-(7, 'Firstname', 'Lastname', '2018-09-13', 'mail@mail.ba', 'usrnm', 'pass', 0, 1, 3);
+(1, 'Logan', 'Hammel', '1988-10-11', 'logan.h88@mail.com', 'admin', '$2y$10$.Fznhy92sSi8DsGa5qNHHOqI6KiVbEhDYXUp.EsDexR7uHP0QOBbq', 1, 1, 1),
+(2, 'Stephen', 'Fullmer', '1990-09-03', 'steve.fm@mail.com', 'librarian', '$2y$10$.Fznhy92sSi8DsGa5qNHHOqI6KiVbEhDYXUp.EsDexR7uHP0QOBbq', 1, 1, 2),
+(4, 'Nancy', 'Eldermann', '1979-09-05', 'nan.el@mail.com', 'user', '$2y$10$PQAn9MA24.FHgQSlBscHKOARal2RnxZcwSpqTWESSciD4dSxhpN32', 1, 1, 3),
+(5, 'Norman', 'Lockley', '1980-09-03', 'norman.el80@mail.com', 'norm80', '$2y$10$RD8Lm7Ca9IHWZhD2abEP5eyXQsTb4Yr8baIcEht57XAAbNvj8R1mu', 0, 1, 3),
+(6, 'Angelica', 'Metzer', '1991-05-06', 'angie91@mail.com', 'angie91', '$2y$10$P6FlBC3ENxnbdZT5wjEpuOC0.r0/dYHI08iTa.vm/XjXpX9eQz29q', 0, 1, 3),
+(7, 'Maude', 'Pontes', '1984-01-13', 'maud84@mail.com', 'mpont84', '$2y$10$.Fznhy92sSi8DsGa5qNHHOqI6KiVbEhDYXUp.EsDexR7uHP0QOBbq', 0, 1, 3);
 
 --
 -- Indexes for dumped tables
@@ -324,8 +348,7 @@ INSERT INTO `user` (`id_user`, `firstname`, `lastname`, `date_of_birth`, `e_mail
 -- Indexes for table `address`
 --
 ALTER TABLE `address`
-  ADD PRIMARY KEY (`id_address`),
-  ADD UNIQUE KEY `zip_code` (`zip_code`);
+  ADD PRIMARY KEY (`id_address`);
 
 --
 -- Indexes for table `author`
@@ -421,19 +444,19 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT for table `address`
 --
 ALTER TABLE `address`
-  MODIFY `id_address` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id_address` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 
 --
 -- AUTO_INCREMENT for table `author`
 --
 ALTER TABLE `author`
-  MODIFY `id_author` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id_author` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT for table `book`
 --
 ALTER TABLE `book`
-  MODIFY `id_book` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id_book` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `book_copy`
@@ -445,19 +468,19 @@ ALTER TABLE `book_copy`
 -- AUTO_INCREMENT for table `book_lend`
 --
 ALTER TABLE `book_lend`
-  MODIFY `id_lend` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id_lend` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `category`
 --
 ALTER TABLE `category`
-  MODIFY `id_category` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id_category` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `genre`
 --
 ALTER TABLE `genre`
-  MODIFY `id_genre` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id_genre` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `member`

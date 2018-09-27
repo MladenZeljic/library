@@ -85,14 +85,14 @@
 		<div class="page-body">
 			<div class="body-nav">
 			<ul id="tabs">
-				<li id="tab-1" onclick="show_selected_view(this);" class="available-tab <?php $helper->print_active_tab_class() ?>"><a href="javascript:void(0);">My info</a></li>
+				<li id="tab-1" onclick="show_selected_view(this);" class="active-tab"><a href="javascript:void(0);">My info</a></li>
 				<?php if($user->get_role()->get_role_title() === 'user' and $helper->is_member($_SESSION["username"]) ){?>
-				<li id="tab-2" onclick="show_selected_view(this);" class="available-tab <?php $helper->print_active_tab_class(true) ?>"><a href="javascript:void(0);">My membership</a></li>
+				<li id="tab-2" onclick="show_selected_view(this);"><a href="javascript:void(0);">My membership</a></li>
 				<?php } ?>
 			<ul>
 			</div>
 			<div id="views">
-				<div id="tab1-view" class="<?php $helper->print_hide_view_class(); ?>" >
+				<div id="tab1-view" >
 					<div id="user-form" class="user-form-wrap">
 						<form class="user-form" method="post" action="">
 							
@@ -147,7 +147,7 @@
 					</div>
 				</div>
 				<?php if($user->get_role()->get_role_title() === 'user' and $helper->is_member($_SESSION["username"]) ){?>
-				<div id="tab2-view" class="<?php $helper->print_hide_view_class(true); ?>" >
+				<div id="tab2-view"  class="tab-view-hide" >
 					<div id="member-form" class="user-form-wrap">
 						<form class="user-form" method="post" action="">
 							

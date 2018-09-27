@@ -47,8 +47,8 @@
 	<link rel="shortcut icon" type="image/x-icon" href="../../resources/images/library-icon.ico" />
 	<link rel="stylesheet" href="../styles/css/bootstrap.min.css" />
 	<link rel="stylesheet" href="../styles/bootstrap-nav-fix.css" />
-	<link rel="stylesheet" href="../styles/author-management.css" />
 	<link rel="stylesheet" href="../styles/bootstrap-form-fix.css" />
+	<link rel="stylesheet" href="../styles/author.css" />
 	<link rel="stylesheet" href="../styles/page.css" />
 	<link rel="stylesheet" href="../styles/footer.css" />
 </head>
@@ -80,9 +80,9 @@
 					</form>
 				</li>
 			</ul>
-			<form class="form-inline my-2 my-lg-0" method="get">
-				<input class="form-control mr-sm-2" type="search" name="search-input" placeholder="Search authors by name">
-				<button class="btn btn-outline-success my-2 my-sm-0" type="submit" name="search" value="search">Search</button>
+			<form class="form-inline my-2 my-lg-0" method="get" onsubmit="return false;">
+				<input class="form-control mr-sm-2" id="search-input" type="search" name="search-input" placeholder="Search author by name">
+				<button class="btn btn-outline-success my-2 my-sm-0" type="button" onclick="do_search('author-management.php','search-input');" name="search" value="search">Search</button>
 			</form>
 			
 		</div>
@@ -92,22 +92,65 @@
 		<div class="page-body">
 			<div class="body-nav">
 			<ul id="tabs">
-				<li id="tab-1" onclick="show_selected_view(this);" class="available-tab <?php $helper->print_active_tab_class() ?>"><a href="javascript:void(0);">Add author</a></li>
-				<li id="tab-2" onclick="show_selected_view(this);" class="available-tab <?php $helper->print_active_tab_class(true) ?>"><a href="javascript:void(0);">Available authors</a></li>
-			<ul>
+				<li id="tab-1" onclick="show_selected_view(this);" class="active-tab"><a href="javascript:void(0);">Add author</a></li>
+				<li id="tab-2" onclick="show_selected_view(this);" ><a href="javascript:void(0);">Available authors</a></li>
+			</ul>
 			</div>
 			<div id="views">
-				<div id="tab1-view" class="<?php $helper->print_hide_view_class(); ?>" >
+				<div id="tab1-view" >
+					<div class="user-form-wrap">
+						<form id="author-form" class="user-form" method="post" onsubmit="return false;" action="">
+							<div class="form-section left-section">
+								<div class="form-group">
+									<label class="control-label col-sm-2 user-col-fix" for="author-firstname-input">Author firstname</label>
+									<div class="col-sm-10 user-col-fix">
+										<input type="text" class="form-control" id="author-firstname-input" name="author-firstname-input" placeholder="Enter author firstname">
+										<span></span>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="control-label col-sm-2 user-col-fix" for="author-lastname-input">Author lastname</label>
+									<div class="col-sm-10 user-col-fix">
+										<input type="text" class="form-control" id="author-lastname-input" name="author-lastname-input" placeholder="Enter author lastname">
+										<span></span>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="control-label col-sm-2 user-col-fix" for="author-birth-date-input">Author birth date</label>
+									<div class="col-sm-10 user-col-fix">
+										<input type="date" class="form-control" id="author-birth-date-input" name="author-birth-date-input" >
+										<span></span>
+									</div>
+								</div>
+							</div>
+							<div class="form-section">
+								<div class="form-group">
+									<label class="control-label col-sm-2 user-col-fix" for="author-biography-input">Author biography</label>
+									<div class="col-sm-10 user-col-fix">
+										<textarea class="form-control" id="author-biography-input" name="author-biography-input" placeholder="You can enter author biography here"></textarea>
+									</div>
+								</div>
+							</div>
+							<div class="clear"></div>
+							<div class="form-group">        
+								<div class="col-sm-offset-2 col-sm-10 user-form-button-wrap">
+									<button type="button" onclick="validateAndSendAuthorForm('author-form')" class="btn btn-primary form-button" name="save" value="save">Save</button>
+								</div>
+							</div>
+							
+						</form>
+					</div>
 				</div>
-				<div id="tab2-view" class="<?php $helper->print_hide_view_class(true); ?>" >
+				<div id="tab2-view" class="tab-view-hide" >
 			
-					<div class="table-container">
-						<table class="table table-striped">
+					<div id="datagrid" class="table-container">
+						<table id="table" class="table table-striped">
 							<thead>
 								<tr>
 									<th scope="col">#</th>
 									<th scope="col">First name</th>
 									<th scope="col">Last name</th>
+									<th scope="col">Date of birth</th>
 									<th scope="col">Short biography</th>
 								</tr>
 							</thead>
@@ -117,7 +160,8 @@
 										<th scope="row"><?php echo $id?></th>
 										<td><?php echo $author->get_firstname(); ?></td>
 										<td><?php echo $author->get_lastname(); ?></td>
-										<td><?php echo $helper->empty_manage($author->get_short_biography()); ?></td>
+										<td><?php echo date('d.m.Y.',strtotime($author->get_date_of_birth())); ?></td>
+										<td class="text-description"><?php echo $helper->empty_manage($author->get_short_biography()); ?></td>
 									</tr>
 								<?php	$id = $id + 1; 
 								} 
@@ -125,34 +169,35 @@
 							</tbody>
 						</table>
 						<div id="table-nums" class="table-nums"><?php
-						$i = 1;
-						echo "<span>";
-						while($i <= $pages_count){
-							echo "<a id='a".$i."' "; 
-							if(isset($_GET["page"])){ 
-								if($i==$_GET["page"]){ 
-									echo "class=page-active" ;
+							$i = 1;
+							echo "<span>";
+							while($i <= $pages_count){
+								echo "<a id='a".$i."' "; 
+								if(isset($_GET["page"])){ 
+									if($i==$_GET["page"]){ 
+										echo "class=page-active" ;
+									} 
 								} 
-							} 
-							else{ 
-								if($i==1){ 
-									echo "class=page-active";
+								else{ 
+									if($i==1){ 
+										echo "class=page-active";
+									}
+									else{
+										echo "class=page";	
+									}
+								}
+								if(!isset($_GET["search"])){ 
+									echo " onclick=mark_page_as_active('table-nums',this);change_page('author-management.php',{$i},null,null);";
 								} 
+								else{
+									echo " onclick=mark_page_as_active('table-nums',this);change_page('author-management.php',{$i},'{$_GET["search-input"]}','search');"; 
+								}
+								echo ' href="javascript:void(0);">'.$i; 
+								$i = $i+1; ?>
+								</a><?php
 							}
-							echo " onclick=mark_page_as_active('table-nums',this);"; 
-							echo " href=author-management.php";
-							if(!isset($_GET["search"])){ 
-								echo "?page=".$i;
-							} 
-							else{ 
-								echo "?page=".$i."&search-input=".$_GET["search-input"]."&search=search";
-							}
-							echo ">".$i; 
-							$i = $i+1; ?>
-							</a><?php
-						}
-					?>
-						</span>
+							?>
+							</span>
 						</div>
 					</div>
 				</div>
@@ -190,6 +235,7 @@
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 	<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
 	<script src="../scripts/index.js"></script>
+	<script src="../scripts/author-script.js"></script>
 
 </body>
 </html>

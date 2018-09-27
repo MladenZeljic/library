@@ -83,7 +83,6 @@ li > a:visited{
 	color: #5eacff;
 	padding-right: 10px;
 }
-
 .page-active{
 	color: #007bff !important;
 }
@@ -94,4 +93,102 @@ li > a:visited{
 
 .tab-view-hide{
 	display:none;
+}
+
+.text-description{
+	text-align: justify;
+	text-justify: inter-word;
+}
+
+input + span,.input-field +span{
+	font-size: 12px;
+	color: #ff6363;
+	padding-left: 10px;
+	padding-bottom: 10px;
+}
+
+.input-field {
+	height: 55px;
+	min-width: 80px;
+	border: 1px solid #ced4da;
+	background-color: #ffffff;
+	border-radius: .25rem;
+	overflow:auto;
+}
+.upper-section{
+	padding-bottom: 0;
+}
+.lower-section{
+	padding-top: 0;
+}
+.input-field + span{
+	display:block;
+	min-height: 30px;
+}
+.book-title-fix{
+	padding-top: 4.5%;
+	padding-bottom: 4.5%;
+}
+.select-values {
+	min-width: 65%;
+}
+
+#input-content,#input-content > li{
+	margin:0;
+	padding:0;
+	list-style:none;
+}
+
+#input-content > li{
+	display: inline-block !important;
+	padding-left: 3px;
+	padding-right: 3px;
+	padding-top: 5px;
+}
+.hide-option{
+	display:none;
+}
+.close-div{
+	cursor: pointer;
+}
+
+.block{
+	min-width:50px;
+	border: 2px solid #007bff;
+	background-color: #007bff;
+	color:#ffffff;
+	border-radius:5px;
+	padding-left:5px;
+	padding-right:5px;
+	overflow:auto;
+}
+
+.float-left{
+	float:left;
+	padding-right:10px;
+	overflow: hidden;
+	width: 100px;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+
+.float-right{
+	float:right;
+}
+
+.float-right:after{
+	clear:both;
+}
+
+.add-button-wrap{
+	display: inline-block;
+	width: 80px;
+	padding-right: 0px;
+	float: left;
+}
+
+.select-box{
+	display: inline-block;
+	width: 50%;
+	float: left;
 }
