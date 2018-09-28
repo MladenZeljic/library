@@ -156,11 +156,11 @@
 
 		public function get_by_name_in_range_with_user($user, $name,$from, $limit){
 			$connection = $this->get_connection();
-			$sql = "SELECT * FROM book_lend INNER JOIN member ON book_lend.id_member = member.id_member INNER JOIN user ON user.id_user = member.id_user WHERE user.id_user = ? AND book_lend.approved = 1 AND (user.firstname LIKE ? OR user.lastname LIKE ? ) LIMIT ?,?";
+			$sql = "SELECT * FROM book_lend  INNER JOIN book_copy ON book_lend.id_book_copy = book_copy.id_book_copy INNER JOIN book ON book_copy.id_book = book.id_book INNER JOIN member ON book_lend.id_member = member.id_member INNER JOIN user ON user.id_user = member.id_user WHERE user.id_user = ? AND book_lend.approved = 1 AND (book.book_title LIKE ?) LIMIT ?,?";
 			$statement = $connection->prepare($sql);
 			$like = "%".$name."%";
 			$id_user = $user->get_id_user();
-			$statement->bind_param("issii",$id_user, $like, $like, $from, $limit);
+			$statement->bind_param("isii",$id_user, $like, $from, $limit);
 			$statement->execute();
 			$results = $statement->get_result();
 			 
@@ -184,11 +184,11 @@
 		
 		public function count_by_name_with_user($user, $name){
 			$connection = $this->get_connection();
-			$book_lend_sql = "SELECT COUNT(*) FROM book_lend INNER JOIN member ON book_lend.id_member = member.id_member INNER JOIN user ON user.id_user = member.id_user WHERE user.id_user = ? AND book_lend.approved = 1 AND (user.firstname LIKE ? OR user.lastname LIKE ? )";
+			$book_lend_sql = "SELECT COUNT(*) FROM book_lend INNER JOIN book_copy ON book_lend.id_book_copy = book_copy.id_book_copy INNER JOIN book ON book_copy.id_book = book.id_book INNER JOIN member ON book_lend.id_member = member.id_member INNER JOIN user ON user.id_user = member.id_user WHERE user.id_user = ? AND book_lend.approved = 1 AND (book.book_title LIKE ? )";
 			$book_lend_statement = $connection->prepare($book_lend_sql);
 			$like = "%".$name."%";
 			$id_user = $user->get_id_user();
-			$book_lend_statement->bind_param("iss", $id_user, $like, $like);
+			$book_lend_statement->bind_param("is", $id_user, $like);
 			$book_lend_statement->execute();
 			$count_result = $book_lend_statement->get_result();
 			$count_row = $count_result->fetch_assoc();
@@ -386,7 +386,7 @@
 		
 		public function insert($object){
 			
-			$db_object = $this->get_by_book_copy($object->get_id_book_copy());
+			$db_object = $this->get_by_book_copy($object->get_book_copy());
 			
 			if(!$db_object){
 				$connection = $this->get_connection();
@@ -421,7 +421,7 @@
 		
 		public function update($old_object, $new_object){
 			
-			$db_object = $this->get_by_id($old_object->get_id_book_copy());
+			$db_object = $this->get_by_book_copy($object->get_book_copy());
 			
 			if($db_object){
 				$connection = $this->get_connection();

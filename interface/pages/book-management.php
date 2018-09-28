@@ -117,12 +117,12 @@
 								<div class="form-group">
 									<label class="control-label col-sm-2 user-col-fix" for="book-title-input">Book title</label>
 									<div class="col-sm-10 user-col-fix">
-										<input type="text" class="form-control" id="book-title-input" name="book-title-input" placeholder="Enter original book title">
+										<input type="text" class="form-control" id="book-title-input" name="book-title-input" placeholder="Enterbook title">
 										<span></span>
 									</div>
 								</div>
 								<div class="form-group book-title-fix">
-									<label class="control-label col-sm-2 user-col-fix" for="original-book-title-input">Original book title</label>
+									<label class="control-label col-sm-2 user-col-fix" for="original-book-title-input">Original title</label>
 									<div class="col-sm-10 user-col-fix">
 										<input type="text" class="form-control" id="original-book-title-input" name="original-book-title-input" placeholder="Enter original book title">
 										<span></span>
@@ -144,7 +144,7 @@
 							<div class="form-section">
 								<div class="form-group">
 									<div class="container input-select-container">
-										<label>Select book authors:</label>
+										<label>Book authors</label>
 										<div id="author-input-field" class="input-field">
 											<ul id="input-content">
 											</ul>
@@ -157,18 +157,19 @@
 														<option value="<?php echo $author->get_id_author();?>"><?php echo $author->get_firstname()." ".$author->get_lastname();?></option>
 													<?php } ?>
 												</select>
-											</div> 
-											<div class="col-sm-offset-2 col-sm-10 add-button-wrap">
-												<button type="button"  onclick="add_selection_box_element('author-input-field');" class="btn btn-primary form-button add-button">Add</button>
 											</div>
-
+											<div class="add-button-wrap">
+											<div class="col-sm-offset-2 col-sm-10">
+												<button type="button"  onclick="add_selection_box_element('author-input-field');" class="btn btn-primary form-button add-button">+</button>
+											</div>
+											</div>
 											<div class="clear"></div>
 										</div>
 									</div>
 								</div>
 								<div class="form-group">
 									<div class="container input-select-container">
-										<label>Select book genres:</label>
+										<label>Book genres</label>
 										<div id="genre-input-field" class="input-field">
 											<ul id="input-content">
 											</ul>
@@ -181,11 +182,12 @@
 														<option value="<?php echo $genre->get_id_genre();?>"><?php echo $genre->get_genre_title();?></option>
 													<?php } ?>
 												</select>
-											</div> 
-											<div class="col-sm-offset-2 col-sm-10 add-button-wrap">
-												<button type="button"  onclick="add_selection_box_element('genre-input-field');" class="btn btn-primary form-button add-button">Add</button>
 											</div>
-											
+											<div class="add-button-wrap"> 
+											<div class="col-sm-offset-2 col-sm-10">
+												<button type="button"  onclick="add_selection_box_element('genre-input-field');" class="btn btn-primary form-button add-button">+</button>
+											</div>
+											</div>
 											<div class="clear"></div>
 										</div>
 									</div>

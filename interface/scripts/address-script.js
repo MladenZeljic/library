@@ -12,7 +12,7 @@ function validateAndSendAddressForm(formId) {
 	}
 	else{
 		zip_input.nextElementSibling.innerHTML = '';
-		if(!zip_input.value.match("[0-9]+$")){
+		if(!zip_input.value.trim().match("[0-9]+$")){
 			zip_input.value = '';
 			zip_input.nextElementSibling.innerHTML = 'Zip code is not correct!';
 		}

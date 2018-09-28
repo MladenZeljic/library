@@ -62,22 +62,22 @@
 					<a class="nav-link" href="interface/pages/login-register.php">Sign in/ sign up</a>
 				</li>
 			</ul>
-			<form class="form-inline my-2 my-lg-0" method="get">
-				<input class="form-control mr-sm-2" type="search" name="search-input" placeholder="Search books by title">
-				<button class="btn btn-outline-success my-2 my-sm-0" type="submit" name="search" value="search">Search</button>
+			<form class="form-inline my-2 my-lg-0" method="get" onsubmit="return false;">
+				<input class="form-control mr-sm-2" id="search-input" type="search" name="search-input" placeholder="Search books by title">
+				<button class="btn btn-outline-success my-2 my-sm-0" type="button" onclick="do_search('index.php','search-input');" name="search" value="search">Search</button>
 			</form>
 		</div>
 	</nav>
 
 	
 
-		<!--Page body-->
+	<!--Page body-->
 	<div class="page-body-wrap">
 		<div class="page-body">
 			<div class="body-nav">
 			<ul id="tabs">
 				<li id="tab-1" onclick="show_selected_view(this);" class="active-tab"><a href="javascript:void(0);">Available books</a></li>
-			<ul>
+			</ul>
 			</div>
 			<div id="views">
 				<div id="tab1-view">
@@ -85,8 +85,8 @@
 						<div class="index-text-title">Welcome!</div> 
 						<small>Here you can search for books that are currently available in our library. To do more please sign in or sign up.</small>
 					</div>
-					<div class="table-container">
-						<table class="table table-striped">
+					<div id="datagrid" class="table-container">
+						<table id="table" class="table table-striped">
 							<thead>
 								<tr>
 									<th scope="col">#</th>
@@ -136,34 +136,35 @@
 							</tbody>
 						</table>
 						<div id="table-nums" class="table-nums"><?php
-						$i = 1;
-						echo "<span>";
-						while($i <= $pages_count){
-							echo "<a id='a".$i."' "; 
-							if(isset($_GET["page"])){ 
-								if($i==$_GET["page"]){ 
-									echo "class=page-active" ;
+							$i = 1;
+							echo "<span>";
+							while($i <= $pages_count){
+								echo "<a id='a".$i."' "; 
+								if(isset($_GET["page"])){ 
+									if($i==$_GET["page"]){ 
+										echo "class=page-active" ;
+									} 
 								} 
-							} 
-							else{ 
-								if($i==1){ 
-									echo "class=page-active";
+								else{ 
+									if($i==1){ 
+										echo "class=page-active";
+									}
+									else{
+										echo "class=page";	
+									}
+								}
+								if(!isset($_GET["search"])){ 
+									echo " onclick=mark_page_as_active('table-nums',this);change_page('index.php',{$i},null,null);";
 								} 
+								else{
+									echo " onclick=mark_page_as_active('table-nums',this);change_page('index.php',{$i},'{$_GET["search-input"]}','search');"; 
+								}
+								echo ' href="javascript:void(0);">'.$i; 
+								$i = $i+1; ?>
+								</a><?php
 							}
-							echo " onclick=mark_page_as_active('table-nums',this);"; 
-							echo " href=index.php";
-							if(!isset($_GET["search"])){ 
-								echo "?page=".$i;
-							} 
-							else{ 
-								echo "?page=".$i."&search-input=".$_GET["search-input"]."&search=search";
-							}
-							echo ">".$i; 
-							$i = $i+1; ?>
-							</a><?php
-						}
-					?>
-						</span>
+							?>
+							</span>
 						</div>
 					</div>
 				</div>

@@ -78,9 +78,9 @@
 					</form>
 				</li>
 			</ul>
-			<form class="form-inline my-2 my-lg-0" method="get">
-				<input class="form-control mr-sm-2" type="search" name="search-input" placeholder="Search lendings">
-				<button class="btn btn-outline-success my-2 my-sm-0" type="submit" name="search" value="search">Search</button>
+			<form class="form-inline my-2 my-lg-0" method="get" onsubmit="return false;">
+				<input class="form-control mr-sm-2" id="search-input" type="search" name="search-input" placeholder="Search book lendings">
+				<button class="btn btn-outline-success my-2 my-sm-0" type="button" onclick="do_search('book-lendings-management.php','search-input');" name="search" value="search">Search</button>
 			</form>
 			
 		</div>
@@ -89,79 +89,82 @@
 
 	
 
-		<!--Page body-->
+	<!--Page body-->
 	<div class="page-body-wrap">
 		<div class="page-body">
 			<div class="body-nav">
-			<ul>
-				<li class="available-tab active-tab"><a href="javascript:void(0);">Available book lendings</a></li>
-			<ul>
+				<ul id="tabs">
+					<li id="tab-1" onclick="show_selected_view(this);" class="active-tab"><a href="javascript:void(0);">Available book lendings</a></li>
+				</ul>
 			</div>
-			
-			<div class="table-container">
-				<table class="table table-striped">
-					<thead>
-						<tr>
-							<th scope="col">#</th>
-							<th scope="col">Full member name</th>
-							<th scope="col">Book title</th>
-							<th scope="col">Lend date</th>
-							<th scope="col">Return date</th>
-							<th scope="col">Approved</th>
-						</tr>
-					</thead>
-					<tbody>
-						<?php foreach($lends as $lend){ 
-							$book = $lend->get_book_copy()->get_book();
-							$user_member = $lend->get_member()->get_user();
-						?>
-							<tr>
-								<th scope="row"><?php echo $id?></th>
-								<td><?php echo $user_member->get_firstname()." ".$user_member->get_lastname(); ?></td>
-								<td><?php echo $book->get_book_title(); ?></td>
-								<td><?php echo $lend->get_lend_date(); ?></td>
-								<td><?php echo $lend->get_return_date(); ?></td>
-								<td><?php echo $helper->get_approval_text($lend->get_approved()); ?></td>
-							</tr>
-						<?php	$id = $id + 1; 
-						} 
-						?>
-					</tbody>
-				</table>
-				<div id="table-nums" class="table-nums"><?php
-				$i = 1;
-				echo "<span>";
-				while($i <= $pages_count){
-					echo "<a id='a".$i."' "; 
-					if(isset($_GET["page"])){ 
-						if($i==$_GET["page"]){ 
-							echo "class=page-active" ;
-						} 
-					} 
-					else{ 
-						if($i==1){ 
-							echo "class=page-active";
-						} 
-					}
-					echo " onclick=mark_page_as_active('table-nums',this);"; 
-					echo " href=book-lendings-management.php";
-					if(!isset($_GET["search"])){ 
-						echo "?page=".$i;
-					} 
-					else{ 
-						echo "?page=".$i."&search-input=".$_GET["search-input"]."&search=search";
-					}
-					echo ">".$i; 
-					$i = $i+1; ?>
-					</a><?php
-				}
-			?>
-				</span>
+			<div id="views">
+				<div id="tab1-view" >
+					<div id="datagrid" class="table-container">
+						<table id="table" class="table table-striped">
+						
+							<thead>
+								<tr>
+									<th scope="col">#</th>
+									<th scope="col">Full member name</th>
+									<th scope="col">Book title</th>
+									<th scope="col">Lend date</th>
+									<th scope="col">Return date</th>
+									<th scope="col">Approved</th>
+								</tr>
+							</thead>
+							<tbody>
+								<?php foreach($lends as $lend){ 
+									$book = $lend->get_book_copy()->get_book();
+									$user_member = $lend->get_member()->get_user();
+								?>
+									<tr>
+										<th scope="row"><?php echo $id?></th>
+										<td><?php echo $user_member->get_firstname()." ".$user_member->get_lastname(); ?></td>
+										<td><?php echo $book->get_book_title(); ?></td>
+										<td><?php echo $lend->get_lend_date(); ?></td>
+										<td><?php echo $lend->get_return_date(); ?></td>
+										<td><?php echo $helper->get_approval_text($lend->get_approved()); ?></td>
+									</tr>
+								<?php	$id = $id + 1; 
+								} 
+								?>
+							</tbody>
+						</table>
+						<div id="table-nums" class="table-nums"><?php
+							$i = 1;
+							echo "<span>";
+							while($i <= $pages_count){
+								echo "<a id='a".$i."' "; 
+								if(isset($_GET["page"])){ 
+									if($i==$_GET["page"]){ 
+										echo "class=page-active" ;
+									} 
+								} 
+								else{ 
+									if($i==1){ 
+										echo "class=page-active";
+									}
+									else{
+										echo "class=page";	
+									}
+								}
+								if(!isset($_GET["search"])){ 
+									echo " onclick=mark_page_as_active('table-nums',this);change_page('book-lendings-management.php',{$i},null,null);";
+								} 
+								else{
+									echo " onclick=mark_page_as_active('table-nums',this);change_page('book-lendings-management.php',{$i},'{$_GET["search-input"]}','search');"; 
+								}
+								echo ' href="javascript:void(0);">'.$i; 
+								$i = $i+1; ?>
+								</a><?php
+							}
+							?>
+							</span>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
-				
-		
 	</div>
 	
 	<div class="footer-container">
@@ -192,5 +195,6 @@
 	</div>
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 	<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+	<script src="../scripts/index.js"></script>
 </body>
 </html>

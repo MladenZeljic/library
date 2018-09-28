@@ -1,6 +1,7 @@
 <?php
 	require_once __DIR__.'/basic_controller.php';
 	require_once __DIR__.'/../data_helpers/helpers.php';
+	include_once __DIR__.'/../data_access/addressDAO.php';
 	include_once __DIR__.'/../data_access/userDAO.php';
 	
 
@@ -14,6 +15,18 @@
 				$helper->redirect("http://localhost/project/");
 			}
 			else{
+				$addressDao = new addressDAO();
+				$address = $addressDao->get_by_id($_POST["id-address"]);
+
+				$publisher = new publisher($_POST['publisher-name-input'],$address);
+				$publisherDao = new publisherDAO();
+				
+				$message = 'Publisher insertion was successfull!';
+				if(!$publisherDao->insert($publisher)){
+					$message = 'Publisher insertion was not successfull!';
+				}
+				echo "<span id='message'>'{$message}'</span>";
+				
 				//...
 			}			
 			

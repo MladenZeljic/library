@@ -103,7 +103,7 @@
 								<div class="form-group">
 									<label class="control-label col-sm-2 user-col-fix" for="category-name-input">Category name</label>
 									<div class="col-sm-10 user-col-fix">
-										<input type="text" class="form-control" id="category-name-input" name="street-input" placeholder="Enter name of category">
+										<input type="text" class="form-control" id="category-name-input" name="category-input" placeholder="Enter name of category">
 										<span></span>
 									</div>
 								</div>

@@ -126,8 +126,8 @@ input + span,.input-field +span{
 	min-height: 30px;
 }
 .book-title-fix{
-	padding-top: 4.5%;
-	padding-bottom: 4.5%;
+	padding-top: 1.7rem;
+	padding-bottom: 1.7rem;
 }
 .select-values {
 	min-width: 65%;
@@ -182,13 +182,23 @@ input + span,.input-field +span{
 
 .add-button-wrap{
 	display: inline-block;
-	width: 80px;
+	width: 50%;
 	padding-right: 0px;
 	float: left;
+	padding-left: 10%;
+}
+.add-button-wrap > .col-sm-offset-2 {
+	padding-right: 0;
+	padding-left: 0;
+	max-width: 100%;
 }
 
 .select-box{
 	display: inline-block;
 	width: 50%;
 	float: left;
+}
+
+#member-notes-input{
+	min-height: 100px;
 }

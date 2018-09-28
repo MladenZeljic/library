@@ -145,7 +145,31 @@
 			}
 			return $users;
 		}
-		
+
+		public function get_non_members(){
+			
+			$connection = $this->get_connection();
+			
+			$sql = "SELECT * FROM user WHERE user.id_role <> 1 AND user.id_role <> 2 AND user.approval = 1 AND user.status = 1 AND user.id_user NOT IN (SELECT id_user FROM member)";
+			$statement = $connection->prepare($sql);
+			$statement->execute();
+			$results = $statement->get_result();			
+			
+			$users = array();
+			$roleDao = new roleDAO();
+			
+			if ($results->num_rows > 0) {
+				while($row = $results->fetch_assoc()) {
+					$role = $roleDao->get_by_id($row["id_role"]);
+					$user = new user($row["firstname"],$row["lastname"],$row["date_of_birth"], $row["e_mail"],
+					$row["username"],$row["password"],$row["approval"],$row["status"],$role);
+					$user->set_id_user($row["id_user"]);
+					array_push($users,$user);
+				}
+			}
+			return $users;
+		}
+				
 		public function count_by_param($param){
 			$connection = $this->get_connection();
 			$sql = "SELECT COUNT(*) FROM user WHERE user.firstname LIKE ? OR user.lastname LIKE ? OR user.username LIKE ? OR user.e_mail LIKE ?";

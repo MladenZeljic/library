@@ -1,6 +1,8 @@
 <?php
 	require_once __DIR__.'/basic_controller.php';
 	require_once __DIR__.'/../data_helpers/helpers.php';
+	include_once __DIR__.'/../data_access/book_lendDAO.php';
+	include_once __DIR__.'/../data_access/memberDAO.php';
 	include_once __DIR__.'/../data_access/userDAO.php';
 	
 
@@ -14,6 +16,20 @@
 				$helper->redirect("http://localhost/project/");
 			}
 			else{
+				$copyDao = new book_copyDAO();
+				$copy = $copyDao->get_by_id($_POST["id-copy"]);
+				
+				$memberDao = new memberDAO();
+				$member = $memberDao->get_by_username($_SESSION["username"]);
+				
+				$lend = new book_lend(date('Y-m-d'),date('Y-m-d', strtotime('+14 day')), 0, $copy, $member);
+				$lendDao = new book_lendDAO();
+				
+				$message = 'Lend insertion was successfull!';
+				if(!$lendDao->insert($lend)){
+					$message = 'Lend insertion was not successfull!';
+				}
+				echo "<span id='message'>'{$message}'</span>";
 				//...
 			}			
 			

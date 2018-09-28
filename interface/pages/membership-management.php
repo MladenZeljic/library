@@ -7,7 +7,11 @@
 	
 	$userDao = new userDAO();
 	$user = $userDao->get_by_username($_SESSION["username"]);
-	
+	$available_users = $userDao->get_non_members();
+
+	$addressDao = new addressDAO();
+	$addresses = $addressDao->get_all();
+
 	$helper = new helpers();	
 	$id = 1;
 	
@@ -77,9 +81,9 @@
 					</form>
 				</li>
 			</ul>
-			<form class="form-inline my-2 my-lg-0" method="get">
-				<input class="form-control mr-sm-2" type="search" name="search-input" placeholder="Search members by name">
-				<button class="btn btn-outline-success my-2 my-sm-0" type="submit" name="search" value="search">Search</button>
+			<form class="form-inline my-2 my-lg-0" method="get" onsubmit="return false;">
+				<input class="form-control mr-sm-2" id="search-input" type="search" name="search-input" placeholder="Search for members">
+				<button class="btn btn-outline-success my-2 my-sm-0" type="button" onclick="do_search('membership-management.php','search-input');" name="search" value="search">Search</button>
 			</form>
 			
 		</div>
@@ -93,17 +97,72 @@
 		<div class="page-body">
 			<div class="body-nav">
 			<ul id="tabs">
-				<li  id="tab-1" onclick="show_selected_view(this);" class="available-tab <?php $helper->print_active_tab_class() ?>"><a href="javascript:void(0);">Add member</a></li>
-				<li  id="tab-2" onclick="show_selected_view(this);" class="available-tab <?php $helper->print_active_tab_class(true) ?>"><a href="javascript:void(0);">Available members</a></li>
-			<ul>
+				<li  id="tab-1" onclick="show_selected_view(this);" class="active-tab"><a href="javascript:void(0);">Add member</a></li>
+				<li  id="tab-2" onclick="show_selected_view(this);"><a href="javascript:void(0);">Available members</a></li>
+			</ul>
 			</div>
 			<div id="views">
-				<div id="tab1-view" class="<?php $helper->print_hide_view_class(); ?>" >
+				<div id="tab1-view" >
+					<div class="user-form-wrap">
+						<form id="member-form" class="user-form" method="post" onsubmit="return false;" action="">
+							<div class="form-section left-section">
+								<div class="form-group">
+									<label class="control-label col-sm-2 user-col-fix" for="user-select">User</label>
+									<div class="col-sm-10 user-col-fix">
+										<select class="form-control" id="user-select" name="user-select" >
+											<?php foreach($available_users as $user){ ?>
+												<option value="<?php echo $user->get_id_user(); ?>"> <?php echo $user->get_firstname()." ".$user->get_lastname()." (".$user->get_username().")"; ?></option>
+											<?php } ?>
+										</select>
+										<span></span>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="control-label col-sm-2 user-col-fix" for="member-address-select">Member address</label>
+									<div class="col-sm-10 user-col-fix">
+										<select class="form-control" id="member-address-select" name="member-address-select" >								<?php foreach($addresses as $address){ ?>
+												<option value="<?php echo $address->get_id_address(); ?>"> <?php echo $address->get_street_address().", ".$address->get_zip_code()." ".$address->get_city(); ?></option>
+											<?php } ?>
+										</select>
+										<span></span>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="control-label col-sm-2 user-col-fix" for="member-phone-input">Member phone</label>
+									<div class="col-sm-10 user-col-fix">
+										<input type="text" class="form-control" id="member-phone-input" name="member-phone-input" placeholder="Enter member phone">
+										<span></span>
+									</div>
+								</div>
+							</div>
+							<div class="form-section">
+								<div class="form-group">
+									<label class="control-label col-sm-2 user-col-fix" for="member-mobile-input">Member mobile phone</label>
+									<div class="col-sm-10 user-col-fix">
+										<input type="text" class="form-control" id="member-mobile-input" name="member-mobile-input" placeholder="Enter member mobile phone number">
+										<span></span>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="control-label col-sm-2 user-col-fix" for="member-notes-input">Member notes</label>
+									<div class="col-sm-10 user-col-fix">
+										<textarea class="form-control" id="member-notes-input" name="member-notes-input" placeholder="You can enter member notes here"></textarea>
+									</div>
+								</div>
+							</div>
+							<div class="clear"></div>
+							<div class="form-group">        
+								<div class="col-sm-offset-2 col-sm-10 user-form-button-wrap">
+									<button type="button" onclick="validateAndSendMemberForm('member-form')" class="btn btn-primary form-button" name="save" value="save">Save</button>
+								</div>
+							</div>
+							
+						</form>
+					</div>
 				</div>
-				<div id="tab2-view" class="<?php $helper->print_hide_view_class(true); ?>" >
-			
-					<div class="table-container">
-						<table class="table table-striped">
+				<div id="tab2-view" class="tab-view-hide" >
+					<div id="datagrid" class="table-container">
+						<table id="table" class="table table-striped">
 							<thead>
 								<tr>
 									<th scope="col">#</th>
@@ -138,34 +197,35 @@
 							</tbody>
 						</table>
 						<div id="table-nums" class="table-nums"><?php
-						$i = 1;
-						echo "<span>";
-						while($i <= $pages_count){
-							echo "<a id='a".$i."' "; 
-							if(isset($_GET["page"])){ 
-								if($i==$_GET["page"]){ 
-									echo "class=page-active" ;
+							$i = 1;
+							echo "<span>";
+							while($i <= $pages_count){
+								echo "<a id='a".$i."' "; 
+								if(isset($_GET["page"])){ 
+									if($i==$_GET["page"]){ 
+										echo "class=page-active" ;
+									} 
 								} 
-							} 
-							else{ 
-								if($i==1){ 
-									echo "class=page-active";
+								else{ 
+									if($i==1){ 
+										echo "class=page-active";
+									}
+									else{
+										echo "class=page";	
+									}
+								}
+								if(!isset($_GET["search"])){ 
+									echo " onclick=mark_page_as_active('table-nums',this);change_page('membership-management.php',{$i},null,null);";
 								} 
+								else{
+									echo " onclick=mark_page_as_active('table-nums',this);change_page('membership-management.php',{$i},'{$_GET["search-input"]}','search');"; 
+								}
+								echo ' href="javascript:void(0);">'.$i; 
+								$i = $i+1; ?>
+								</a><?php
 							}
-							echo " onclick=mark_page_as_active('table-nums',this);"; 
-							echo " href=membership-management.php";
-							if(!isset($_GET["search"])){ 
-								echo "?page=".$i;
-							} 
-							else{ 
-								echo "?page=".$i."&search-input=".$_GET["search-input"]."&search=search";
-							}
-							echo ">".$i; 
-							$i = $i+1; ?>
-							</a><?php
-						}
-					?>
-						</span>
+							?>
+							</span>
 						</div>
 					</div>
 				</div>
@@ -204,5 +264,6 @@
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 	<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
 	<script src="../scripts/index.js"></script>
+	<script src="../scripts/member-script.js"></script>
 </body>
 </html>
