@@ -238,7 +238,7 @@
 				$sql = "DELETE FROM member WHERE id_member = ?";
 				$statement = $connection->prepare($sql);
 				
-				$id = $db_object_membership->get_user()->get_id_user();
+				$id = $db_object_membership->get_id_member();
 				$statement->bind_param("i",$id);
 				
 				return $statement->execute();

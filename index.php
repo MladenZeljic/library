@@ -45,11 +45,13 @@
 		<link rel="shortcut icon" type="image/x-icon" href="resources/images/library-icon.ico" />
 		<link rel="stylesheet" href="interface/styles/css/bootstrap.min.css" />
 		<link rel="stylesheet" href="interface/styles/bootstrap-nav-fix.css" />
-		<link rel="stylesheet" href="interface/styles/admin-manager.css" />
+		<link rel="stylesheet" href="interface/styles/bootstrap-table-fix.css" />
 		<link rel="stylesheet" href="interface/styles/bootstrap-form-fix.css" />
+		<link rel="stylesheet" href="interface/styles/modal.css" />
 		<link rel="stylesheet" href="interface/styles/page.css" />
 		<link rel="stylesheet" href="interface/styles/index.css" />
 		<link rel="stylesheet" href="interface/styles/footer.css" />
+  
 	</head>
 	<body>
 		<nav class="navbar navbar-expand-lg nav-fix sticky-top navbar-light bg-light">
@@ -168,6 +170,7 @@
 						</div>
 					</div>
 				</div>
+				
 			</div>
 		</div>		
 		

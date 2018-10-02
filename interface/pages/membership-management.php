@@ -51,6 +51,8 @@
 		<link rel="stylesheet" href="../styles/css/bootstrap.min.css" />
 		<link rel="stylesheet" href="../styles/bootstrap-nav-fix.css" />
 		<link rel="stylesheet" href="../styles/bootstrap-form-fix.css" />
+		<link rel="stylesheet" href="../styles/bootstrap-table-fix.css" />
+		<link rel="stylesheet" href="../styles/modal.css" />
 		<link rel="stylesheet" href="../styles/page.css" />
 		<link rel="stylesheet" href="../styles/footer.css" />
 	</head>
@@ -146,7 +148,8 @@
 								<div class="form-group">
 									<label class="control-label col-sm-2 user-col-fix" for="member-notes-input">Member notes</label>
 									<div class="col-sm-10 user-col-fix">
-										<textarea class="form-control" id="member-notes-input" name="member-notes-input" placeholder="You can enter member notes here"></textarea>
+										<textarea maxlength="300" class="form-control" id="member-notes-input" name="member-notes-input" placeholder="You can enter member notes here" onkeyup="setCharCount(this)"></textarea>
+										<div id="count-container" ><span id="char-text">Characters left:</span><span id="chars-count">300</span></div>
 									</div>
 								</div>
 							</div>
@@ -180,13 +183,13 @@
 								<?php foreach($memberships as $member){ 
 									
 								?>
-									<tr>
+									<tr id="<?php echo $member->get_id_member(); ?>" data-toggle="modal" data-target="#memberEditModal" onclick='setModalValues("memberEditModal",this);'>
 										<th scope="row"><?php echo $id?></th>
 										<td><?php echo $member->get_user()->get_firstname()." ".$member->get_user()->get_lastname(); ?></td>
 										<td><?php echo $member->get_member_phone(); ?></td>
 										<td><?php echo $member->get_member_mobile(); ?></td>
-										<td><?php echo $member->get_member_from(); ?></td>
-										<td><?php echo $member->get_member_to(); ?></td>
+										<td><?php echo date('d.m.Y.',strtotime($member->get_member_from())); ?></td>
+										<td><?php echo date('d.m.Y.',strtotime($member->get_member_to())); ?></td>
 										<td><?php echo $member->get_member_address()->get_street_address().", ".$member->get_member_address()->get_zip_code()." ".$member->get_member_address()->get_city(); ?></td>
 										<td><?php echo $member->get_penality_points(); ?></td>
 										<td><?php echo $helper->empty_manage($member->get_notes()); ?></td>
@@ -233,6 +236,80 @@
 		</div>
 				
 		
+	</div>
+	
+	<!-- Modal -->
+	<div class="modal fade" id="memberEditModal" tabindex="-1" role="dialog">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title" id="memberEditLabel">Edit member</h4>
+					<button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+				</div>
+				<div class="modal-body">
+					<div class="user-form-wrap">
+						<div class="form-section left-section">
+							<div class="form-group">
+								<label class="control-label col-sm-2 user-col-fix" for="member-id-edit-input">Member id</label>
+								<div class="col-sm-10 user-col-fix">
+									<input type="text" class="form-control" id="member-id-edit-input" name="member-id-edit-input">
+									<span></span>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="control-label col-sm-2 user-col-fix" for="member-address-edit-select">Member address</label>
+								<div class="col-sm-10 user-col-fix">
+									<select class="form-control" id="member-address-edit-select" name="member-address-select" >							<?php foreach($addresses as $address){ ?>
+										<option value="<?php echo $address->get_id_address(); ?>"> <?php echo $address->get_street_address().", ".$address->get_zip_code()." ".$address->get_city(); ?></option>
+											<?php } ?>
+									</select>
+									<span>&nbsp;</span>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="control-label col-sm-2 user-col-fix" for="member-phone-edit-input">Member phone</label>
+								<div class="col-sm-10 user-col-fix">
+									<input type="text" class="form-control" id="member-phone-edit-input" name="member-phone-edit-input" placeholder="Enter member phone">
+									<span></span>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="control-label col-sm-2 user-col-fix" for="member-mobile-edit-input">Member mobile phone</label>
+								<div class="col-sm-10 user-col-fix">
+									<input type="text" class="form-control" id="member-mobile-edit-input" name="member-mobile-edit-input" placeholder="Enter member mobile phone number">
+									<span></span>
+								</div>
+							</div>
+								
+						</div>
+							
+						<div class="form-section">
+							<div class="form-group">
+								<label class="control-label col-sm-2 user-col-fix" for="member-to-edit-input">Member to</label>
+								<div class="col-sm-10 user-col-fix">
+									<input type="date" class="form-control" id="member-to-edit-input" name="member-to-edit-input">
+									<span></span>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="control-label col-sm-2 user-col-fix" for="member-notes-edit-input">Notes</label>
+								<div class="col-sm-10 user-col-fix">
+									<textarea maxlength="300" class="form-control" id="member-notes-edit-input" name="member-notes-edit-input" placeholder="You can enter member notes here" onkeyup="setCharCount(this)"></textarea>
+									<div id="count-container" ><span id="char-text">Characters left:</span><span id="chars-count">300</span></div>
+								</div>
+							</div>
+							
+						</div>
+						<div class="clear"></div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					<button type="button" onclick="deleteData('memberEditModal','membership-management.php');" class="btn btn-danger" data-dismiss="modal">Delete</button>
+					<button type="button" onclick="sendUpdatedMemberData('memberEditModal');" class="btn btn-primary" data-dismiss="modal">Save changes</button>
+				</div>
+			</div>
+		</div>
 	</div>
 	
 	<div class="footer-container">

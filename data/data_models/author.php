@@ -1,5 +1,5 @@
 <?php 
-	class author {
+	class author implements JsonSerializable {
 		protected $_id_author;
 		protected $_firstname;
 		protected $_lastname;
@@ -69,6 +69,13 @@
 		
 		public function remove_book(){
 			return array_pop($this->_books);
+		}
+		public function jsonSerialize() {
+			return [
+			'id_author' => $this->get_id_author(),
+			'firstname' => $this->get_firstname(),
+			'lastname' => $this->get_lastname()
+			];
 		}
 		
 	} 

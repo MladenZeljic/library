@@ -30,7 +30,6 @@
 textarea {
 	resize: none;
 }
-
 .nav-item:first-child{
 	padding-left: 10px;
 }
@@ -51,6 +50,9 @@ ul li{
 	outline-style: none;
 }
 
+.inline-check{
+	display: inline-block;
+}
 .active-tab > a, .active-tab > a:hover, .active-tab > a:visited{
 	color:#007bff;
 }
@@ -200,5 +202,9 @@ input + span,.input-field +span{
 }
 
 #member-notes-input{
-	min-height: 100px;
+	min-height: 80px;
+}
+
+#member-notes-edit-input{
+	min-height: 130px;
 }

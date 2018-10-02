@@ -47,6 +47,8 @@
 		<link rel="stylesheet" href="../styles/css/bootstrap.min.css" />
 		<link rel="stylesheet" href="../styles/bootstrap-nav-fix.css" />
 		<link rel="stylesheet" href="../styles/bootstrap-form-fix.css" />
+		<link rel="stylesheet" href="../styles/bootstrap-table-fix.css" />
+		<link rel="stylesheet" href="../styles/modal.css" />
 		<link rel="stylesheet" href="../styles/category.css" />
 		<link rel="stylesheet" href="../styles/page.css" />
 		<link rel="stylesheet" href="../styles/footer.css" />
@@ -103,7 +105,7 @@
 								<div class="form-group">
 									<label class="control-label col-sm-2 user-col-fix" for="category-name-input">Category name</label>
 									<div class="col-sm-10 user-col-fix">
-										<input type="text" class="form-control" id="category-name-input" name="category-input" placeholder="Enter name of category">
+										<input type="text" class="form-control" id="category-name-input" name="category-name-input" placeholder="Enter name of category">
 										<span></span>
 									</div>
 								</div>
@@ -132,7 +134,7 @@
 								<?php foreach($categories as $category){ 
 									
 								?>
-									<tr>
+									<tr id="<?php echo $category->get_id_category(); ?>" data-toggle="modal" data-target="#categoryEditModal" onclick="setModalValues('categoryEditModal',this);">
 										<th scope="row"><?php echo $id?></th>
 										<td><?php echo $category->get_category_title(); ?></td>
 										
@@ -179,6 +181,44 @@
 		</div>
 				
 		
+	</div>
+	
+	<!-- Modal -->
+	<div class="modal fade" id="categoryEditModal" tabindex="-1" role="dialog">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title" id="categoryEditLabel">Edit category</h4>
+					<button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+				</div>
+				<div class="modal-body">
+					<div class="user-form-wrap">
+						<div class="category-form-section">
+							<div class="form-group">
+								<label class="control-label col-sm-2 user-col-fix" for="category-id-edit-input">Category id</label>
+								<div class="col-sm-10 user-col-fix">
+									<input type="text" class="form-control" id="category-id-edit-input" name="category-id-edit-input">
+									<span></span>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="control-label col-sm-2 user-col-fix" for="category-edit-name-input">Category name</label>
+								<div class="col-sm-10 user-col-fix">
+									<input type="text" class="form-control" id="category-edit-name-input" name="category-edit-name-input" placeholder="Enter name of category">
+									<span></span>
+								</div>
+							</div>
+								
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					<button type="button" onclick="deleteData('categoryEditModal','category-management.php');" class="btn btn-danger" data-dismiss="modal">Delete</button>
+					<button type="button" onclick="sendUpdatedCategoryData('categoryEditModal');" class="btn btn-primary" data-dismiss="modal">Save changes</button>
+				</div>
+			</div>
+		</div>
 	</div>
 	
 	<div class="footer-container">

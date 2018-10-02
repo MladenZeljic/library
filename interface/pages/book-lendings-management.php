@@ -47,6 +47,8 @@
 		<link rel="stylesheet" href="../styles/css/bootstrap.min.css" />
 		<link rel="stylesheet" href="../styles/bootstrap-nav-fix.css" />
 		<link rel="stylesheet" href="../styles/bootstrap-form-fix.css" />
+		<link rel="stylesheet" href="../styles/bootstrap-table-fix.css" />
+		<link rel="stylesheet" href="../styles/modal.css" />
 		<link rel="stylesheet" href="../styles/page.css" />
 		<link rel="stylesheet" href="../styles/footer.css" />
 	</head>
@@ -117,12 +119,12 @@
 									$book = $lend->get_book_copy()->get_book();
 									$user_member = $lend->get_member()->get_user();
 								?>
-									<tr>
+									<tr id="<?php echo $lend->get_id_lend(); ?>" data-toggle="modal" data-target="#bookLendEditModal" onclick='setModalValues("bookLendEditModal",this);'>
 										<th scope="row"><?php echo $id?></th>
 										<td><?php echo $user_member->get_firstname()." ".$user_member->get_lastname(); ?></td>
 										<td><?php echo $book->get_book_title(); ?></td>
-										<td><?php echo $lend->get_lend_date(); ?></td>
-										<td><?php echo $lend->get_return_date(); ?></td>
+										<td><?php echo date('d.m.Y.',strtotime($lend->get_lend_date())); ?></td>
+										<td><?php echo date('d.m.Y.',strtotime($lend->get_return_date())); ?></td>
 										<td><?php echo $helper->get_approval_text($lend->get_approved()); ?></td>
 									</tr>
 								<?php	$id = $id + 1; 
@@ -167,6 +169,53 @@
 		</div>
 	</div>
 	
+	<!-- Modal -->
+	<div class="modal fade" id="bookLendEditModal" tabindex="-1" role="dialog">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title" id="bookLendEditLabel">Edit book lend</h4>
+					<button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+				</div>
+				<div class="modal-body">
+					<div class="user-form-wrap">
+						<div class="form-section">
+							<div class="form-group">
+								<label class="control-label col-sm-2 user-col-fix" for="book-id-edit-input">Book id</label>
+								<div class="col-sm-10 user-col-fix">
+									<input type="text" class="form-control" id="book-id-edit-input" name="book-id-edit-input">
+									<span></span>
+								</div>
+							</div>
+							<div class="form-check inline-check">
+								<div class="col-sm-offset-2 col-sm-10">
+									<div class="checkbox">
+										<input type="checkbox" class="form-check-input" id="approved-lend-check" onclick="changeCheckValue(this);">
+										<label class="form-check-label" for="approved-lend-check">Approve</label>
+									</div>
+								</div>
+							</div>
+							
+							
+						</div>
+							
+						<div class="form-section">
+							
+														
+						</div>
+						<div class="clear"></div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					<button type="button" onclick="deleteData('bookLendEditModal','book-lendings-management.php');" class="btn btn-danger" data-dismiss="modal">Delete</button>
+					<button type="button" onclick="sendUpdatedLendData('bookLendEditModal');" class="btn btn-primary" data-dismiss="modal">Save changes</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	
 	<div class="footer-container">
 		<div class="row text-center text-xs-center text-sm-left text-md-left justify">
 			<div class="col-xs-12 col-sm-4 col-md-4 links">
@@ -196,5 +245,6 @@
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 	<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
 	<script src="../scripts/index.js"></script>
+	<script src="../scripts/lend-script.js"></script>
 </body>
 </html>

@@ -1,5 +1,5 @@
 <?php 
-	class genre {
+	class genre implements JsonSerializable {
 		protected $_id_genre;
 		protected $_genre_title;
 		protected $_books;
@@ -39,6 +39,12 @@
 		
 		public function remove_book(){
 			return array_pop($this->_books);
+		}
+		public function jsonSerialize() {
+			return [
+			'id_genre' => $this->get_id_genre(),
+			'genre_title' => $this->get_genre_title()
+			];
 		}
 		
 	} 

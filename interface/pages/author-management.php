@@ -48,6 +48,8 @@
 	<link rel="stylesheet" href="../styles/css/bootstrap.min.css" />
 	<link rel="stylesheet" href="../styles/bootstrap-nav-fix.css" />
 	<link rel="stylesheet" href="../styles/bootstrap-form-fix.css" />
+	<link rel="stylesheet" href="../styles/bootstrap-table-fix.css" />
+	<link rel="stylesheet" href="../styles/modal.css" />
 	<link rel="stylesheet" href="../styles/author.css" />
 	<link rel="stylesheet" href="../styles/page.css" />
 	<link rel="stylesheet" href="../styles/footer.css" />
@@ -127,7 +129,8 @@
 								<div class="form-group">
 									<label class="control-label col-sm-2 user-col-fix" for="author-biography-input">Author biography</label>
 									<div class="col-sm-10 user-col-fix">
-										<textarea class="form-control" id="author-biography-input" name="author-biography-input" placeholder="You can enter author biography here"></textarea>
+										<textarea maxlength="300" class="form-control" id="author-biography-input" name="author-biography-input" placeholder="You can enter author biography here" onkeyup="setCharCount(this)"></textarea>
+										<div id="count-container" ><span id="char-text">Characters left:</span><span id="chars-count">300</span></div>
 									</div>
 								</div>
 							</div>
@@ -156,7 +159,7 @@
 							</thead>
 							<tbody>
 								<?php foreach($authors as $author){ ?>
-									<tr>
+									<tr id="<?php echo $author->get_id_author(); ?>" data-toggle="modal" data-target="#authorEditModal" onclick="setModalValues('authorEditModal',this);">
 										<th scope="row"><?php echo $id?></th>
 										<td><?php echo $author->get_firstname(); ?></td>
 										<td><?php echo $author->get_lastname(); ?></td>
@@ -200,6 +203,67 @@
 							</span>
 						</div>
 					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<!-- Modal -->
+	<div class="modal fade" id="authorEditModal" tabindex="-1" role="dialog">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title" id="authorEditLabel">Edit author</h4>
+					<button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+				</div>
+				<div class="modal-body">
+					<div class="user-form-wrap">
+						<div class="form-section left-section">
+							<div class="form-group">
+								<label class="control-label col-sm-2 user-col-fix" for="author-id-edit-input">Author id</label>
+								<div class="col-sm-10 user-col-fix">
+									<input type="text" class="form-control" id="author-id-edit-input" name="author-id-edit-input">
+									<span></span>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="control-label col-sm-2 user-col-fix" for="author-edit-firstname-input">Author firstname</label>
+								<div class="col-sm-10 user-col-fix">
+									<input type="text" class="form-control" id="author-edit-firstname-input" name="author-edit-firstname-input" placeholder="Enter author firstname">
+									<span></span>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="control-label col-sm-2 user-col-fix" for="author-edit-lastname-input">Author lastname</label>
+								<div class="col-sm-10 user-col-fix">
+									<input type="text" class="form-control" id="author-edit-lastname-input" name="author-edit-lastname-input" placeholder="Enter author lastname">
+									<span></span>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="control-label col-sm-2 user-col-fix" for="author-edit-birth-date-input">Author birth date</label>
+								<div class="col-sm-10 user-col-fix">
+									<input type="date" class="form-control" id="author-edit-birth-date-input" name="author-edit-birth-date-input" >
+									<span></span>
+								</div>
+							</div>
+						</div>
+						<div class="form-section">
+							<div class="form-group">
+								<label class="control-label col-sm-2 user-col-fix" for="author-edit-biography-input">Author biography</label>
+								<div class="col-sm-10 user-col-fix">
+									<textarea maxlength="300" class="form-control" id="author-edit-biography-input" name="author-edit-biography-input" placeholder="You can enter author biography here" onkeyup="setCharCount(this)"></textarea>
+									<div id="count-edit-container"><span id="char-edit-text">Characters left:</span><span id="chars-edit-count">300</span></div>
+								</div>
+							</div>
+						</div>
+						<div class="clear"></div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					<button type="button" onclick="deleteData('authorEditModal','author-management.php');" class="btn btn-danger" data-dismiss="modal">Delete</button>
+					<button type="button" onclick="sendUpdatedAuthorData('authorEditModal');" class="btn btn-primary" data-dismiss="modal">Save changes</button>
 				</div>
 			</div>
 		</div>

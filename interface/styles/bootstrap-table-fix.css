@@ -1,0 +1,7 @@
+tbody > tr:nth-child(odd):hover {
+    background-color: rgba(0,0,0,.02);
+}
+
+tbody > tr:nth-child(even):hover {
+    background-color: rgba(0,0,0,.09);
+}

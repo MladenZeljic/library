@@ -17,12 +17,43 @@
 			else{
 				$authorDao = new authorDAO();
 				
-				$author = new author($_POST['author-firstname-input'],$_POST['author-lastname-input'],$_POST['author-birth-date-input'],$_POST['author-biography-input']);
-				$message = 'Author insertion was successfull!';
-				if(!$authorDao->insert($author)){
-					$message = 'Author insertion was not successfull!';
+				if(!isset($_POST["id-author"])){
+					if(isset($_POST["action"]) && $_POST["action"] == 'delete'){
+						$author = $authorDao->get_by_id($_POST["id"]);
+						$message = 'Author deletion was successfull!';
+						if(!$authorDao->delete($author)){
+							$message = 'Author deletion was not successfull!';
+						}
+					}
+					else{
+						$author = new author($_POST['author-firstname-input'],$_POST['author-lastname-input'],$_POST['author-birth-date-input'],$_POST['author-biography-input']);
+						$message = 'Author insertion was successfull!';
+						if(!$authorDao->insert($author)){
+							$message = 'Author insertion was not successfull!';
+						}
+				
+					}
 				}
-				echo "<span id='message'>'{$message}'</span>";
+				
+				else{
+					$old_author = $authorDao->get_by_id($_POST["id-author"]);
+					$new_author = $old_author;
+					if(!empty($_POST["author-firstname-input"])){
+						$new_author->set_firstname($_POST["author-firstname-input"]);					
+					}
+					if(!empty($_POST["author-lastname-input"])){
+						$new_author->set_lastname($_POST["author-lastname-input"]);					
+					}
+					if(!empty($_POST["author-date-of-birth-input"])){
+						$new_author->set_date_of_birth($_POST["author-date-of-birth-input"]);					
+					}
+					$new_author->set_short_biography($_POST["author-biography-input"]);
+					$message = 'Author update was successfull!';
+					if(!$authorDao->update($old_author,$new_author)){
+						$message = 'Author update was not successfull!';
+					}				
+				}
+				echo "<span id='message'>{$message}</span>";
 				
 				//...
 			}

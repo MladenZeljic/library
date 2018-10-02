@@ -126,6 +126,18 @@
 			$count_row = $count_result->fetch_assoc();
 			return $count_row['COUNT(*)'];
 		}
+		
+		public function count_by_member($member){
+			$connection = $this->get_connection();
+			$book_lend_sql = "SELECT COUNT(*) FROM book_lend INNER JOIN member ON book_lend.id_member = member.id_member INNER JOIN user ON user.id_user = member.id_user WHERE user.username LIKE ?";
+			$book_lend_statement = $connection->prepare($book_lend_sql);
+			$like = "%".$member->get_user()->get_username()."%";
+			$book_lend_statement->bind_param("s",$like);
+			$book_lend_statement->execute();
+			$count_result = $book_lend_statement->get_result();
+			$count_row = $count_result->fetch_assoc();
+			return $count_row['COUNT(*)'];
+		}
 
 		public function get_in_range_with_user($user, $from, $limit){
 			$connection = $this->get_connection();
@@ -421,22 +433,22 @@
 		
 		public function update($old_object, $new_object){
 			
-			$db_object = $this->get_by_book_copy($object->get_book_copy());
+			$db_object = $this->get_by_id($old_object->get_id_lend());
 			
 			if($db_object){
 				$connection = $this->get_connection();
 				
-				$sql = "UPDATE book_copy SET lend_date = ?, return_date = ?, approved = ?, 
+				$sql = "UPDATE book_lend SET lend_date = ?, return_date = ?, approved = ?, 
 							     id_book_copy = ?, id_member = ?
-							     WHERE id_book_copy = ?";
-				$lend_date = $object->get_lend_date();
-				$return_date = $object->get_return_date();
-				$approved = $object->get_approved();
-				$id_book_copy = $object->get_book_copy()->get_id_book_copy();
-				$id_member = $object->get_member()->get_id_member();
+							     WHERE id_lend = ?";
+				$statement = $connection->prepare($sql);				
+				$lend_date = $new_object->get_lend_date();
+				$return_date = $new_object->get_return_date();
+				$approved = $new_object->get_approved();
+				$id_book_copy = $new_object->get_book_copy()->get_id_book_copy();
+				$id_member = $new_object->get_member()->get_id_member();
 				$id_lend = $db_object->get_id_lend();
-				
-				$statement->bind_param("ssiii",$lend_date, $return_date, $approved,
+				$statement->bind_param("ssiiii",$lend_date, $return_date, $approved,
 							       $id_book_copy,$id_member,$id_lend);
 												   
 				return $statement->execute();
@@ -453,7 +465,7 @@
 				$sql = "DELETE FROM book_lend WHERE id_lend = ?";
 				$statement = $connection->prepare($sql);
 				
-				$id = $db_object->get_id_book_lend();
+				$id = $db_object->get_id_lend();
 				$statement->bind_param("i",$id);
 				
 				$lend_delete = $statement->execute();

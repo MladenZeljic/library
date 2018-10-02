@@ -1,4 +1,5 @@
 <?php
+	require_once __DIR__.'/../../data/data_access/roleDAO.php';
 	require_once __DIR__.'/../../data/data_access/userDAO.php';
 	require_once __DIR__.'/../../data/data_controllers/user_management_controller.php';
 
@@ -6,8 +7,11 @@
 	$user_management_controller->do_action();
 	
 	$userDao = new userDAO();
-	$user = $userDao->get_by_username($_SESSION["username"]);
-	
+	$this_user = $userDao->get_by_username($_SESSION["username"]);
+
+	$roleDao = new roleDAO();
+	$roles = $roleDao->get_all();
+
 	$helper = new helpers();	
 	$id = 1;
 	
@@ -46,6 +50,8 @@
 		<link rel="stylesheet" href="../styles/css/bootstrap.min.css" />
 		<link rel="stylesheet" href="../styles/bootstrap-nav-fix.css" />
 		<link rel="stylesheet" href="../styles/bootstrap-form-fix.css" />
+		<link rel="stylesheet" href="../styles/bootstrap-table-fix.css" />
+		<link rel="stylesheet" href="../styles/modal.css" />
 		<link rel="stylesheet" href="../styles/page.css" />
 		<link rel="stylesheet" href="../styles/footer.css" />
 	</head>
@@ -89,9 +95,9 @@
 	<div class="page-body-wrap">
 		<div class="page-body">
 			<div class="body-nav">
-			<ul>
+			<ul id="tabs">
 				<li  id="tab-1" onclick="show_selected_view(this);" class="active-tab"><a href="javascript:void(0);">Available users</a></li>
-			<ul>
+			</ul>
 			</div>
 			<div id="views">
 				<div id="tab1-view" >
@@ -115,7 +121,7 @@
 								<?php foreach($users as $user){ 
 									
 								?>
-									<tr>
+									<tr id="<?php echo $user->get_id_user(); ?>" data-toggle="modal" data-target="#userEditModal" onclick="setModalValues('userEditModal',this,'<?php echo $this_user->get_username(); ?>','<?php echo $this_user->get_role()->get_role_title(); ?>');">
 										<th scope="row"><?php echo $id?></th>
 										<td><?php echo $user->get_firstname(); ?></td>
 										<td><?php echo $user->get_lastname(); ?></td>
@@ -169,6 +175,62 @@
 		</div>
 	</div>
 	
+	<!-- Modal -->
+	<div class="modal fade" id="userEditModal" tabindex="-1" role="dialog">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title" id="userEditLabel">Edit user</h4>
+					<button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+				</div>
+				<div class="modal-body">
+					<div class="user-form-wrap">
+						<div class="genre-form-section">
+							<div class="form-group">
+								<label class="control-label col-sm-2 user-col-fix" for="user-id-edit-input">User id</label>
+								<div class="col-sm-10 user-col-fix">
+									<input type="text" class="form-control" id="user-id-edit-input" name="user-id-edit-input">
+									<span></span>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="control-label col-sm-2 user-col-fix" for="role-select">Role</label>
+								<div class="col-sm-10 user-col-fix">
+									<select class="form-control" id="role-select" name="role-select" >										<?php foreach($roles as $role){ ?>
+											<option value="<?php echo $role->get_id_role(); ?>"> <?php echo $role->get_role_title(); ?></option>
+											<?php } ?>
+									</select>
+									<span></span>
+								</div>
+							</div>
+							<div class="form-check inline-check">
+								<div class="col-sm-offset-2 col-sm-10">
+									<div class="checkbox">
+										<input type="checkbox" class="form-check-input" id="approved-check" onclick="changeCheckValue(this);">
+										<label class="form-check-label" for="approved-check">Approve</label>
+									</div>
+								</div>
+							</div>
+							<div class="form-check inline-check">
+								<div class="col-sm-offset-2 col-sm-10">
+									<div class="checkbox">
+										<input type="checkbox" class="form-check-input" id="active-check" onclick="changeCheckValue(this);">
+										<label class="form-check-label" for="active-check">Active</label>
+									</div>
+								</div>
+							</div>	
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					<button type="button" onclick="deleteData('userEditModal','user-management.php');" class="btn btn-danger" data-dismiss="modal">Delete</button>
+					<button type="button" onclick="sendUpdatedUserData('userEditModal');" class="btn btn-primary" data-dismiss="modal">Save changes</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	
 	<div class="footer-container">
 		<div class="row text-center text-xs-center text-sm-left text-md-left justify">
 			<div class="col-xs-12 col-sm-4 col-md-4 links">
@@ -198,5 +260,6 @@
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 	<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
 	<script src="../scripts/index.js"></script>
+	<script src="../scripts/user-management-script.js"></script>
 </body>
 </html>

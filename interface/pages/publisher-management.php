@@ -50,6 +50,8 @@
 		<link rel="stylesheet" href="../styles/css/bootstrap.min.css" />
 		<link rel="stylesheet" href="../styles/bootstrap-nav-fix.css" />
 		<link rel="stylesheet" href="../styles/bootstrap-form-fix.css" />
+		<link rel="stylesheet" href="../styles/bootstrap-table-fix.css" />
+		<link rel="stylesheet" href="../styles/modal.css" />
 		<link rel="stylesheet" href="../styles/page.css" />
 		<link rel="stylesheet" href="../styles/footer.css" />
 	</head>
@@ -150,7 +152,7 @@
 								<?php foreach($publishers as $publisher){ 
 									
 								?>
-									<tr>
+									<tr id="<?php echo $publisher->get_id_publisher(); ?>" data-toggle="modal" data-target="#publisherEditModal" onclick='setModalValues("publisherEditModal",this);'>
 										<th scope="row"><?php echo $id?></th>
 										<td><?php echo $publisher->get_publisher_name(); ?></td>
 										<td><?php echo $publisher->get_publisher_address()->get_street_address().", ".$publisher->get_publisher_address()->get_zip_code()." ".$publisher->get_publisher_address()->get_city(); ?></td>
@@ -195,9 +197,61 @@
 				</div>
 			</div>
 		</div>
-				
-		
 	</div>
+
+	<!-- Modal -->
+	<div class="modal fade" id="publisherEditModal" tabindex="-1" role="dialog">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title" id="publisherEditLabel">Edit publisher</h4>
+					<button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+				</div>
+				<div class="modal-body">
+					<div class="user-form-wrap">
+						
+						<div class="form-section left-section">
+							<div class="form-group">
+								<label class="control-label col-sm-2 user-col-fix" for="publisher-id-edit-input">Publisher id</label>
+								<div class="col-sm-10 user-col-fix">
+									<input type="text" class="form-control" id="publisher-id-edit-input" name="publisher-id-edit-input">
+									<span></span>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="control-label col-sm-2 user-col-fix" for="publisher-name-edit-input">Publisher name</label>
+								<div class="col-sm-10 user-col-fix">
+									<input type="text" class="form-control" id="publisher-name-edit-input" name="publisher-name-edit-input" placeholder="Enter publisher name">
+									<span></span>
+								</div>
+							</div>
+						</div>
+						<div class="form-section">
+							<div class="form-group">
+								<label class="control-label col-sm-2 user-col-fix" for="publisher-address-edit-select">Publisher address</label>
+								<div class="col-sm-10 user-col-fix">
+									<select class="form-control" id="publisher-address-edit-select" name="publisher-address-select" >						<?php foreach($addresses as $address){ ?>
+											<option value="<?php echo $address->get_id_address(); ?>"> <?php echo $address->get_street_address().", ".$address->get_zip_code()." ".$address->get_city(); ?></option>
+										<?php } ?>
+									</select>
+									<span></span>
+								</div>
+							</div>
+								
+						</div>
+							
+						<div class="clear"></div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					<button type="button" onclick="deleteData('publisherEditModal','publisher-management.php');" class="btn btn-danger" data-dismiss="modal">Delete</button>
+					<button type="button" onclick="sendUpdatedPublisherData('publisherEditModal');" class="btn btn-primary" data-dismiss="modal">Save changes</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
 	
 	<div class="footer-container">
 		<div class="row text-center text-xs-center text-sm-left text-md-left justify">

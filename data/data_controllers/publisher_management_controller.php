@@ -16,16 +16,47 @@
 			}
 			else{
 				$addressDao = new addressDAO();
-				$address = $addressDao->get_by_id($_POST["id-address"]);
-
-				$publisher = new publisher($_POST['publisher-name-input'],$address);
 				$publisherDao = new publisherDAO();
-				
-				$message = 'Publisher insertion was successfull!';
-				if(!$publisherDao->insert($publisher)){
-					$message = 'Publisher insertion was not successfull!';
+						
+				if(!isset($_POST["id-publisher"])){
+					if(isset($_POST["action"]) && $_POST["action"] == 'delete'){
+						$publisher = $publisherDao->get_by_id($_POST["id"]);
+						
+						$message = 'Publisher deletion was successfull!';
+						if(!$publisherDao->delete($publisher)){
+							$message = 'Publisher deletion was not successfull!';
+						}
+					}
+					else{
+						$address = $addressDao->get_by_id($_POST["id-address"]);
+
+						$publisher = new publisher($_POST['publisher-name-input'],$address);
+						$publisherDao = new publisherDAO();
+						
+						$message = 'Publisher insertion was successfull!';
+						if(!$publisherDao->insert($publisher)){
+							$message = 'Publisher insertion was not successfull!';
+						}
+					}
 				}
-				echo "<span id='message'>'{$message}'</span>";
+				
+				else{
+					$old_publisher = $publisherDao->get_by_id($_POST["id-publisher"]);
+					$new_publisher = $old_publisher;
+	
+					$address = $addressDao->get_by_id($_POST["id-address"]);
+
+					$new_publisher->set_publisher_address($address);	
+					if(!empty($_POST['publisher-name-input'])){
+						$new_publisher->set_publisher_name($_POST['publisher-name-input']);
+					}
+					$message = 'Publisher update was successfull!';
+					if(!$publisherDao->update($old_publisher,$new_publisher)){
+						$message = 'Publisher update was not successfull!';
+					}				
+				}
+				
+				echo "<span id='message'>{$message}</span>";
 				
 				//...
 			}			

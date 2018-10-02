@@ -71,3 +71,36 @@ function sendAddressData(formId){
 	xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
 	xhttp.send(params); 
 }
+function sendUpdatedAddressData(modalId){
+	var xhttp;
+	if (window.XMLHttpRequest) {
+		xhttp = new XMLHttpRequest();
+	} 
+	else {
+		xhttp = new ActiveXObject('Microsoft.XMLHTTP');
+	}
+	var modal = document.getElementById(modalId);
+	
+	var id_address = modal.getElementsByTagName('input')[0];
+	var zip_input = modal.getElementsByTagName('input')[3];				
+	var street_input = modal.getElementsByTagName('input')[1];
+	var city_input = modal.getElementsByTagName('input')[2];
+	var params = 'id-address='+id_address.value+'zip-input='+zip_input.value+'&street-input='+street_input.value+'&city-input='+city_input.value;
+		
+	xhttp.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+			var new_table = getElement("table",this.responseText);
+			var old_table = document.getElementById("table");
+			document.getElementById("datagrid").replaceChild(new_table,old_table);
+			var new_nav_span = getElement("table-nums",this.responseText).firstChild;
+			var old_nav_span = document.getElementById("table-nums").firstChild;
+			document.getElementById("table-nums").replaceChild(new_nav_span,old_nav_span);
+			var message = getElement("message",this.responseText).innerHTML;
+			alert(message);
+		}
+	};
+	
+	xhttp.open('POST', 'address-management.php', true);
+	xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+	xhttp.send(params);
+}

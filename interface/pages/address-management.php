@@ -45,8 +45,9 @@
 		<link rel="shortcut icon" type="image/x-icon" href="../../resources/images/library-icon.ico" />
 		<link rel="stylesheet" href="../styles/css/bootstrap.min.css" />
 		<link rel="stylesheet" href="../styles/bootstrap-nav-fix.css" />
-		<link rel="stylesheet" href="../styles/admin-manager.css" />
+		<link rel="stylesheet" href="../styles/bootstrap-table-fix.css" />
 		<link rel="stylesheet" href="../styles/bootstrap-form-fix.css" />
+		<link rel="stylesheet" href="../styles/modal.css" />
 		<link rel="stylesheet" href="../styles/page.css" />
 		<link rel="stylesheet" href="../styles/footer.css" />
 	</head>
@@ -150,7 +151,7 @@
 								<?php foreach($addresses as $address){ 
 									
 								?>
-									<tr>
+									<tr id="<?php echo $address->get_id_address(); ?>" data-toggle="modal" data-target="#addressEditModal" onclick="setModalValues('addressEditModal',this);">
 										<th scope="row"><?php echo $id?></th>
 										<td><?php echo $address->get_street_address(); ?></td>
 										<td><?php echo $address->get_zip_code(); ?></td>
@@ -222,6 +223,61 @@
 			</hr>
 		</div>
 	</div>
+
+	<!-- Modal -->
+	<div class="modal fade" id="addressEditModal" tabindex="-1" role="dialog">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title" id="addressEditLabel">Edit address</h4>
+					<button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+				</div>
+				<div class="modal-body">
+					<div class="user-form-wrap">
+						<div class="form-section left-section">
+							<div class="form-group">
+								<label class="control-label col-sm-2 user-col-fix" for="address-id-edit-input">Address id</label>
+								<div class="col-sm-10 user-col-fix">
+									<input type="text" class="form-control" id="address-id-edit-input" name="address-id-edit-input">
+									<span></span>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="control-label col-sm-2 user-col-fix" for="street-edit-input">Street address</label>
+								<div class="col-sm-10 user-col-fix">
+									<input type="text" class="form-control" id="street-edit-input" name="street-edit-input" placeholder="Enter street address">
+									<span></span>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="control-label col-sm-2 user-col-fix" for="city-edit-input">City name</label>
+								<div class="col-sm-10 user-col-fix">
+									<input type="text" class="form-control" id="city-edit-input" name="city-edit-input" placeholder="Enter city name">
+									<span></span>
+								</div>
+							</div>
+						</div>
+						<div class="form-section">
+							<div class="form-group">
+								<label class="control-label col-sm-2 user-col-fix" for="zip-edit-input">Zip-code</label>
+								<div class="col-sm-10 user-col-fix">
+									<input type="text" class="form-control" id="zip-edit-input" name="zip-edit-input" placeholder="Enter zip code">
+									<span></span>
+								</div>
+							</div>
+						</div>
+						<div class="clear"></div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					<button type="button" onclick="deleteData('addressEditModal','address-management.php');" class="btn btn-danger" data-dismiss="modal">Delete</button>
+					<button type="button" onclick="sendUpdatedAddressData('addressEditModal');" class="btn btn-primary" data-dismiss="modal">Save changes</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 	<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
 	<script src="../scripts/index.js"></script>

@@ -49,8 +49,8 @@
 		<link rel="shortcut icon" type="image/x-icon" href="../../resources/images/library-icon.ico" />
 		<link rel="stylesheet" href="../styles/css/bootstrap.min.css" />
 		<link rel="stylesheet" href="../styles/bootstrap-nav-fix.css" />
-		<link rel="stylesheet" href="../styles/admin-manager.css" />
 		<link rel="stylesheet" href="../styles/bootstrap-form-fix.css" />
+		<link rel="stylesheet" href="../styles/bootstrap-table-fix.css" />
 		<link rel="stylesheet" href="../styles/book-lend.css" />
 		<link rel="stylesheet" href="../styles/page.css" />
 		<link rel="stylesheet" href="../styles/footer.css" />
@@ -132,12 +132,12 @@
 									$book = $lend->get_book_copy()->get_book();
 									$user_member = $lend->get_member()->get_user();
 								?>
-									<tr>
+									<tr id="<?php echo $lend->get_id_lend(); ?>" onclick="returnBook(this);">
 										<th scope="row"><?php echo $id?></th>
 										<td><?php echo $user_member->get_firstname()." ".$user_member->get_lastname(); ?></td>
 										<td><?php echo $book->get_book_title(); ?></td>
-										<td><?php echo $lend->get_lend_date(); ?></td>
-										<td><?php echo $lend->get_return_date(); ?></td>
+										<td><?php echo date('d.m.Y.',strtotime($lend->get_lend_date())); ?></td>
+										<td><?php echo date('d.m.Y.',strtotime($lend->get_return_date())); ?></td>
 										<td><?php echo $helper->get_approval_text($lend->get_approved()); ?></td>
 									</tr>
 								<?php	$id = $id + 1; 

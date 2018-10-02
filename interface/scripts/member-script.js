@@ -83,3 +83,42 @@ function sendMemberData(formId){
 	xhttp.send(params); 
 	
 }
+
+function sendUpdatedMemberData(formId){
+	var xhttp;
+	if (window.XMLHttpRequest) {
+		xhttp = new XMLHttpRequest();
+	} 
+	else {
+		xhttp = new ActiveXObject('Microsoft.XMLHTTP');
+	}
+	var form = document.getElementById(formId);
+	
+	var member_id_input = form.getElementsByTagName('input')[0];
+	var member_phone_input = form.getElementsByTagName('input')[1];
+	var member_mobile_input = form.getElementsByTagName('input')[2];
+	var member_to_input = form.getElementsByTagName('input')[3];
+	var address_select = form.getElementsByTagName('select')[0];
+	var address_id = address_select.options[address_select.selectedIndex].value;	
+	var member_notes = form.getElementsByTagName('textarea')[0];
+	
+	var params = 'id-member='+member_id_input.value+'&member-phone-input='+member_phone_input.value+'&member-mobile-input='+member_mobile_input.value+'&member-to='+member_to_input.value+"&id-address="+address_id+"&notes="+member_notes.value;
+		
+	xhttp.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+			var new_table = getElement("table",this.responseText);
+			var old_table = document.getElementById("table");
+			document.getElementById("datagrid").replaceChild(new_table,old_table);
+			var new_nav_span = getElement("table-nums",this.responseText).firstChild;
+			var old_nav_span = document.getElementById("table-nums").firstChild;
+			document.getElementById("table-nums").replaceChild(new_nav_span,old_nav_span);
+			var message = getElement("message",this.responseText).innerHTML;
+			alert(message);
+		}
+	};
+	
+	xhttp.open('POST', 'membership-management.php', true);
+	xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+	xhttp.send(params); 
+	
+}

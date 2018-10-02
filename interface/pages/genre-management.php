@@ -47,6 +47,8 @@
 		<link rel="stylesheet" href="../styles/css/bootstrap.min.css" />
 		<link rel="stylesheet" href="../styles/bootstrap-nav-fix.css" />
 		<link rel="stylesheet" href="../styles/bootstrap-form-fix.css" />
+		<link rel="stylesheet" href="../styles/bootstrap-table-fix.css" />
+		<link rel="stylesheet" href="../styles/modal.css" />
 		<link rel="stylesheet" href="../styles/genre.css" />
 		<link rel="stylesheet" href="../styles/page.css" />
 		<link rel="stylesheet" href="../styles/footer.css" />
@@ -133,7 +135,7 @@
 								<?php foreach($genres as $genre){ 
 									
 								?>
-									<tr>
+									<tr id="<?php echo $genre->get_id_genre(); ?>" data-toggle="modal" data-target="#genreEditModal" onclick="setModalValues('genreEditModal',this);">
 										<th scope="row"><?php echo $id?></th>
 										<td><?php echo $genre->get_genre_title(); ?></td>
 									</tr>
@@ -174,6 +176,44 @@
 							</span>
 						</div>
 					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<!-- Modal -->
+	<div class="modal fade" id="genreEditModal" tabindex="-1" role="dialog">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title" id="genreEditLabel">Edit genre</h4>
+					<button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+				</div>
+				<div class="modal-body">
+					<div class="user-form-wrap">
+						<div class="genre-form-section">
+							<div class="form-group">
+								<label class="control-label col-sm-2 user-col-fix" for="genre-id-edit-input">Genre id</label>
+								<div class="col-sm-10 user-col-fix">
+									<input type="text" class="form-control" id="genre-id-edit-input" name="genre-id-edit-input">
+									<span></span>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="control-label col-sm-2 user-col-fix" for="genre-edit-name-input">Genre title</label>
+								<div class="col-sm-10 user-col-fix">
+									<input type="text" class="form-control" id="genre-edit-name-input" name="genre-edit-input" placeholder="Enter title of genre">
+									<span></span>
+								</div>
+							</div>
+								
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					<button type="button" onclick="deleteData('genreEditModal','genre-management.php');" class="btn btn-danger" data-dismiss="modal">Delete</button>
+					<button type="button" onclick="sendUpdatedGenreData('genreEditModal');" class="btn btn-primary" data-dismiss="modal">Save changes</button>
 				</div>
 			</div>
 		</div>

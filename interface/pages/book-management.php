@@ -59,6 +59,8 @@
 		<link rel="stylesheet" href="../styles/css/bootstrap.min.css" />
 		<link rel="stylesheet" href="../styles/bootstrap-nav-fix.css" />
 		<link rel="stylesheet" href="../styles/bootstrap-form-fix.css" />
+		<link rel="stylesheet" href="../styles/bootstrap-table-fix.css" />
+		<link rel="stylesheet" href="../styles/modal.css" />
 		<link rel="stylesheet" href="../styles/page.css" />
 		<link rel="stylesheet" href="../styles/footer.css" />
 	</head>
@@ -117,7 +119,7 @@
 								<div class="form-group">
 									<label class="control-label col-sm-2 user-col-fix" for="book-title-input">Book title</label>
 									<div class="col-sm-10 user-col-fix">
-										<input type="text" class="form-control" id="book-title-input" name="book-title-input" placeholder="Enterbook title">
+										<input type="text" class="form-control" id="book-title-input" name="book-title-input" placeholder="Enter book title">
 										<span></span>
 									</div>
 								</div>
@@ -224,8 +226,10 @@
 									$genres = $book->get_genres();
 									$authors_string = "";
 									$genres_string = "";
+									$authors_json = addslashes(json_encode($authors));
+									$genres_json = addslashes(json_encode($genres));
 								?>
-									<tr>
+									<tr id="<?php echo $book->get_id_book(); ?>" data-toggle="modal" data-target="#bookEditModal" onclick='setModalValues("bookEditModal",this,null,null,"<?php echo $authors_json; ?>","<?php echo $genres_json; ?>");'>
 										<th scope="row"><?php echo $id?></th>
 										<td><?php echo $book->get_book_title(); ?></td>
 										<td><?php echo $book->get_original_book_title(); ?></td>
@@ -294,6 +298,125 @@
 				
 		
 	</div>
+	
+	<!-- Modal -->
+	<?php 
+		
+		$authors = $authorDao->get_all();
+		$categories = $categoryDao->get_all();
+		$genres = $genreDao->get_all();	
+	?>
+	<div class="modal fade" id="bookEditModal" tabindex="-1" role="dialog">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title" id="bookEditLabel">Edit book</h4>
+					<button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+				</div>
+				<div class="modal-body">
+					<div class="user-form-wrap">
+						<div class="form-section left-section">
+							<div class="form-group">
+								<label class="control-label col-sm-2 user-col-fix" for="book-id-edit-input">Book id</label>
+								<div class="col-sm-10 user-col-fix">
+									<input type="text" class="form-control" id="book-id-edit-input" name="book-id-edit-input">
+									<span></span>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="control-label col-sm-2 user-col-fix" for="book-title-edit-input">Book title</label>
+								<div class="col-sm-10 user-col-fix">
+									<input type="text" class="form-control" id="book-title-edit-input" name="book-title-edit-input" placeholder="Enter book title">
+									<span></span>
+								</div>
+							</div>
+							<div class="form-group book-title-fix">
+								<label class="control-label col-sm-2 user-col-fix" for="original-book-title-edit-input">Original title</label>
+								<div class="col-sm-10 user-col-fix">
+									<input type="text" class="form-control" id="original-book-title-edit-input" name="original-book-title-edit-input" placeholder="Enter original book title">
+									<span></span>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="control-label col-sm-2 user-col-fix" for="category-edit-select">Category title</label>
+								<div class="col-sm-10 user-col-fix">
+									<select class="form-control select-values">
+										<?php foreach($categories as $category){ ?>
+											<option value=<?php echo $category->get_id_category();?>><?php echo $category->get_category_title();?></option>
+										<?php } ?>
+									</select>
+									<span></span>
+								</div>
+							</div>
+							
+						</div>
+							
+						<div class="form-section">
+							
+							<div class="form-group">
+								<div class="container input-select-container">
+									<label>Book authors</label>
+									<div id="author-edit-input-field" class="input-field">
+										<ul id="input-content">
+										</ul>
+									</div>
+									<span></span>
+									<div class="input-container">
+										<div class="form-group select-box">
+											<select class="form-control select-values">
+												<?php foreach($authors as $author){ ?>
+													<option value="<?php echo $author->get_id_author();?>"><?php echo $author->get_firstname()." ".$author->get_lastname();?></option>
+												<?php } ?>
+											</select>
+										</div>
+										<div class="add-button-wrap">
+											<div class="col-sm-offset-2 col-sm-10">
+												<button type="button"  onclick="add_selection_box_element('author-edit-input-field');" class="btn btn-primary form-button add-button">+</button>
+											</div>
+										</div>
+										<div class="clear"></div>
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<div class="container input-select-container">
+									<label>Book genres</label>
+									<div id="genre-edit-input-field" class="input-field">
+										<ul id="input-content">
+										</ul>
+									</div>
+									<span></span>
+									<div class="input-container">
+										<div class="form-group select-box">
+											<select class="form-control select-values">
+												<?php foreach($genres as $genre){ ?>
+													<option value="<?php echo $genre->get_id_genre();?>"><?php echo $genre->get_genre_title();?></option>
+												<?php } ?>
+											</select>
+										</div>
+										<div class="add-button-wrap"> 
+											<div class="col-sm-offset-2 col-sm-10">
+												<button type="button"  onclick="add_selection_box_element('genre-edit-input-field');" class="btn btn-primary form-button add-button">+</button>
+											</div>
+										</div>
+										<div class="clear"></div>
+									</div>
+								</div>
+							</div>
+														
+						</div>
+						<div class="clear"></div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					<button type="button" onclick="deleteData('bookEditModal','book-management.php');" class="btn btn-danger" data-dismiss="modal">Delete</button>
+					<button type="button" onclick="sendUpdatedBookData('bookEditModal');" class="btn btn-primary" data-dismiss="modal">Save changes</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	
 	
 	<div class="footer-container">
 		<div class="row text-center text-xs-center text-sm-left text-md-left justify">

@@ -17,12 +17,37 @@
 			else{
 				$genreDao = new genreDAO();
 				
-				$genre = new genre($_POST['genre-name-input']);
-				$message = 'Genre insertion was successfull!';
-				if(!$genreDao->insert($genre)){
-					$message = 'Genre insertion was not successfull!';
+				if(!isset($_POST["id-genre"])){
+					if(isset($_POST["action"]) && $_POST["action"] == 'delete'){
+						$genre = $genreDao->get_by_id($_POST["id"]);
+						$message = 'Genre deletion was successfull!';
+						if(!$genreDao->delete($genre)){
+							$message = 'Genre deletion was not successfull!';
+						}
+					}
+					else{
+										
+						$genre = new genre($_POST['genre-name-input']);
+						$message = 'Genre insertion was successfull!';
+						if(!$genreDao->insert($genre)){
+							$message = 'Genre insertion was not successfull!';
+						}
+				
+					}
 				}
-				echo "<span id='message'>'{$message}'</span>";
+				
+				else{
+					$old_genre = $genreDao->get_by_id($_POST["id-genre"]);
+					$new_genre = $old_genre;
+					if(!empty($_POST['genre-name-input'])){
+						$new_genre->set_genre_title($_POST["genre-name-input"]);
+					}
+					$message = 'Genre update was successfull!';
+					if(!$genreDao->update($old_genre,$new_genre)){
+						$message = 'Genre update was not successfull!';
+					}				
+				}
+				echo "<span id='message'>{$message}</span>";
 				
 				//...
 			}			

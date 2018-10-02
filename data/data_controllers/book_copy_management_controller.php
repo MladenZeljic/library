@@ -18,18 +18,51 @@
 			}
 			else{
 				$bookDao = new bookDAO();
-				$book = $bookDao->get_by_id($_POST["id-book"]);
-				$publisherDao = new publisherDAO();
-				$publisher = $publisherDao->get_by_id($_POST["id-publisher"]);
-
-				$book_copy = new book_copy($_POST['year-of-publication-input'],$_POST['number-of-pages-input'],1,$book,$publisher);
 				$copyDao = new book_copyDAO();
-				
-				$message = 'Book copy insertion was successfull!';
-				if(!$copyDao->insert($book_copy)){
-					$message = 'Book copy insertion was not successfull!';
+				$publisherDao = new publisherDAO();
+						
+				if(!isset($_POST["id-copy"])){
+					if(isset($_POST["action"]) && $_POST["action"] == 'delete'){
+						$copy = $copyDao->get_by_id($_POST["id"]);
+						$message = 'Book copy deletion was successfull!';
+						if(!$copyDao->delete($copy)){
+							$message = 'Book copy deletion was not successfull!';
+						}
+					}
+					else{
+						$book = $bookDao->get_by_id($_POST["id-book"]);
+						$publisher = $publisherDao->get_by_id($_POST["id-publisher"]);
+
+						$book_copy = new book_copy($_POST['year-of-publication-input'],$_POST['number-of-pages-input'],1,$book,$publisher);
+						
+						$message = 'Book copy insertion was successfull!';
+						if(!$copyDao->insert($book_copy)){
+							$message = 'Book copy insertion was not successfull!';
+						}
+					}
 				}
-				echo "<span id='message'>'{$message}'</span>";
+				
+				else{
+					$old_copy = $copyDao->get_by_id($_POST["id-copy"]);
+					$new_copy = $old_copy;
+	
+					$book = $bookDao->get_by_id($_POST["id-book"]);
+					$publisher = $publisherDao->get_by_id($_POST["id-publisher"]);
+					
+					$new_copy->set_book($book);
+					$new_copy->set_publisher($publisher);		
+					if(!empty($_POST['year-of-publication-input'])){
+						$new_copy->set_year_of_publication($_POST['year-of-publication-input']);					
+					}
+					if(!empty($_POST['number-of-pages-input'])){
+						$new_copy->set_number_of_pages($_POST['number-of-pages-input']);					
+					}
+					$message = 'Book copy update was successfull!';
+					if(!$copyDao->update($old_copy,$new_copy)){
+						$message = 'Book copy update was not successfull!';
+					}				
+				}
+				echo "<span id='message'>{$message}</span>";
 				
 				//...
 			}			

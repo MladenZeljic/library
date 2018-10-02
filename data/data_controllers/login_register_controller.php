@@ -28,6 +28,17 @@
 					$_SESSION["username"] = $username;
 					
 					//
+					$memberDao = new memberDao();
+					$member = $memberDao->get_by_username($username);
+					//if user is member and if its membership has expired then delete it
+					if($member){
+						$member_to = $member->get_member_to();
+						$today = date('Y-m-d');
+						if($member_to < $today){
+							$memberDao->delete($member);
+						}
+					}					
+					
 					$helper->redirect("http://localhost/project/interface/pages/user-profile.php");	
 				}
 				else{

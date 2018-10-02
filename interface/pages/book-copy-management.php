@@ -56,8 +56,9 @@
 		<link rel="shortcut icon" type="image/x-icon" href="../../resources/images/library-icon.ico" />
 		<link rel="stylesheet" href="../styles/css/bootstrap.min.css" />
 		<link rel="stylesheet" href="../styles/bootstrap-nav-fix.css" />
-		<link rel="stylesheet" href="../styles/admin-manager.css" />
 		<link rel="stylesheet" href="../styles/bootstrap-form-fix.css" />
+		<link rel="stylesheet" href="../styles/bootstrap-table-fix.css" />
+		<link rel="stylesheet" href="../styles/modal.css" />
 		<link rel="stylesheet" href="../styles/page.css" />
 		<link rel="stylesheet" href="../styles/footer.css" />
 	</head>
@@ -178,7 +179,7 @@
 								<?php foreach($copies as $copy){ 
 									
 								?>
-									<tr>
+									<tr id="<?php echo $copy->get_id_book_copy(); ?>" data-toggle="modal" data-target="#bookCopyEditModal" onclick='setModalValues("bookCopyEditModal",this);'>
 										<th scope="row"><?php echo $id?></th>
 										<td><?php echo $copy->get_book()->get_book_title(); ?></td>
 										<td><?php echo $copy->get_year_of_publication(); ?></td>
@@ -229,6 +230,81 @@
 		</div>
 				
 		
+	</div>
+	
+	<!-- Modal -->
+	<?php 
+		$books = $bookDao->get_all();
+		$publishers = $publisherDao->get_all();
+	?>
+	<div class="modal fade" id="bookCopyEditModal" tabindex="-1" role="dialog">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title" id="bookCopyEditLabel">Edit book copy</h4>
+					<button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+				</div>
+				<div class="modal-body">
+					<div class="user-form-wrap">
+						<div class="form-section left-section">
+							<div class="form-group">
+								<label class="control-label col-sm-2 user-col-fix" for="copy-id-edit-input">Book copy id</label>
+								<div class="col-sm-10 user-col-fix">
+									<input type="text" class="form-control" id="copy-id-edit-input" name="copy-id-edit-input">
+									<span></span>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="control-label col-sm-2 user-col-fix" for="copy-book-edit-select">Book</label>
+								<div class="col-sm-10 user-col-fix">
+									<select class="form-control" id="copy-book-edit-select" name="copy-book-edit-select" >
+										<?php foreach($books as $book){ ?>
+											<option value="<?php echo $book->get_id_book(); ?>"> <?php echo $book->get_book_title(); ?></option>
+										<?php } ?>
+									</select>
+									<span></span>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="control-label col-sm-2 user-col-fix" for="year-of-publication-edit-input">Year of publication</label>
+								<div class="col-sm-10 user-col-fix">
+									<input type="text" class="form-control" id="year-of-publication-edit-input" name="year-of-publication-edit-input" placeholder="Enter year of publication">
+									<span></span>
+								</div>
+							</div>
+							
+						</div>
+							
+						<div class="form-section">
+							<div class="form-group">
+								<label class="control-label col-sm-2 user-col-fix" for="publisher-select">Book publisher</label>
+								<div class="col-sm-10 user-col-fix">
+									<select class="form-control" id="publisher-select" name="publisher-select" >
+										<?php foreach($publishers as $publisher){ ?>
+											<option value="<?php echo $publisher->get_id_publisher(); ?>"> <?php echo $publisher->get_publisher_name(); ?></option>
+										<?php } ?>
+									</select>
+									<span></span>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="control-label col-sm-2 user-col-fix" for="number-of-pages-input">Number of pages</label>
+								<div class="col-sm-10 user-col-fix">
+									<input type="text" class="form-control" id="number-of-pages-input" name="number-of-pages-input" placeholder="Enter number of pages">
+									<span></span>
+								</div>
+							</div>							
+						</div>
+						<div class="clear"></div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					<button type="button" onclick="deleteData('bookCopyEditModal','book-management.php');" class="btn btn-danger" data-dismiss="modal">Delete</button>
+					<button type="button" onclick="sendUpdatedCopyData('bookCopyEditModal');" class="btn btn-primary" data-dismiss="modal">Save changes</button>
+				</div>
+			</div>
+		</div>
 	</div>
 	
 	<div class="footer-container">

@@ -17,12 +17,41 @@
 			else{
 				$addressDao = new addressDAO();
 				
-				$address = new address($_POST['zip-input'], $_POST['street-input'], $_POST['city-input']);
-				$message = 'Address insertion was successfull!';
-				if(!$addressDao->insert($address)){
-					$message = 'Address insertion was not successfull!';
+				if(!isset($_POST["id-address"])){
+					if(isset($_POST["action"]) && $_POST["action"] == 'delete'){
+						$address = $addressDao->get_by_id($_POST["id"]);
+						$message = 'Address deletion was successfull!';
+						if(!$addressDao->delete($address)){
+							$message = 'Address deletion was not successfull!';
+						}
+					}
+					else{
+						$address = new address($_POST['zip-input'], $_POST['street-input'], $_POST['city-input']);
+						$message = 'Address insertion was successfull!';
+						if(!$addressDao->insert($address)){
+							$message = 'Address insertion was not successfull!';
+						}
+					}
 				}
-				echo "<span id='message'>'{$message}'</span>";
+				
+				else{
+					$old_address = $addressDao->get_by_id($_POST["id-address"]);
+					$new_address = $old_address;
+					if(!empty($_POST['zip-input'])){
+						$new_address->set_zip_code($_POST["zip-input"]);
+					}
+					if(!empty($_POST['street-input'])){
+						$new_address->set_street_address($_POST["street-input"]);
+					}
+					if(!empty($_POST['city-input'])){
+						$new_address->set_city($_POST["city-input"]);
+					}
+					$message = 'Address update was successfull!';
+					if(!$addressDao->update($old_address,$new_address)){
+						$message = 'Address update was not successfull!';
+					}				
+				}
+				echo "<span id='message'>{$message}</span>";
 				
 				//...
 			}			

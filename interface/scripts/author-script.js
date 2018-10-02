@@ -68,4 +68,38 @@ function sendAuthorData(formId){
 	xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
 	xhttp.send(params); 
 }
-
+function sendUpdatedAuthorData(modalId){
+	var xhttp;
+	if (window.XMLHttpRequest) {
+		xhttp = new XMLHttpRequest();
+	} 
+	else {
+		xhttp = new ActiveXObject('Microsoft.XMLHTTP');
+	}
+	var modal = document.getElementById(modalId);
+	
+	var id_author = modal.getElementsByTagName('input')[0];
+	var author_firstname_input = modal.getElementsByTagName('input')[1];
+	var author_lastname_input = modal.getElementsByTagName('input')[2];
+	var author_date_of_birth_input = modal.getElementsByTagName('input')[3];
+	var author_biography_input = modal.getElementsByTagName('textarea')[0];
+	
+	var params = 'id-author='+id_author.value+'&author-firstname-input='+author_firstname_input.value+'&author-lastname-input='+author_lastname_input.value+'&author-date-of-birth-input='+author_date_of_birth_input.value+'&author-biography-input='+author_biography_input.value;
+	xhttp.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+			var new_table = getElement("table",this.responseText);
+			var old_table = document.getElementById("table");
+			document.getElementById("datagrid").replaceChild(new_table,old_table);
+			var new_nav_span = getElement("table-nums",this.responseText).firstChild;
+			var old_nav_span = document.getElementById("table-nums").firstChild;
+			document.getElementById("table-nums").replaceChild(new_nav_span,old_nav_span);
+			var message = getElement("message",this.responseText).innerHTML;
+			alert(message);
+		}
+	};
+	
+	xhttp.open('POST', 'author-management.php', true);
+	xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+	xhttp.send(params);
+	
+}

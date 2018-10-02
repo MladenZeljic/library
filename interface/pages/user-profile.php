@@ -53,7 +53,7 @@
 				<?php if($user->get_role()->get_role_title() === 'librarian' ){?>
 				<li class="nav-item dropdown">
 					<a class="nav-link dropdown-toggle" href="javascript:void(0);" id="navbarLibraryDropdown" role="button" data-toggle="dropdown">
-						Library options
+						Library options 
 					</a>
 					<div class="dropdown-menu">
 						<a class="dropdown-item" href="/project/interface/pages/author-management.php">Manage authors</a>
@@ -66,7 +66,7 @@
 				<?php } ?>
 				<?php if($user->get_role()->get_role_title() === 'user' and $helper->is_member($_SESSION["username"]) ){?>
 				<li class="nav-item">
-					<a class="nav-link" href="/project/interface/pages/user-book.php">My books</a>
+					<a class="nav-link" href="/project/interface/pages/user-book.php">My books </a>
 				</li>
 				<?php } ?>
 				<li class="nav-item">
@@ -197,7 +197,8 @@
 								<div class="form-group">
 									<label class="control-label col-sm-2 user-col-fix" for="notes-input">Notes:</label>
 									<div class="col-sm-10 user-col-fix">
-										<textarea class="form-control notes" rows="5" id="notes-input" name="notes-input"><?php echo $member->get_notes();?></textarea>
+										<textarea maxlength="300" class="form-control notes" rows="5" id="notes-input" name="notes-input" onkeyup="setCharCount(this)"><?php echo $member->get_notes();?></textarea>
+										<div id="count-container" ><span id="char-text">Characters left:</span><span id="chars-count"><?php $result = 300-strlen($member->get_notes()); echo $result; ?></span></div>
 									</div>
 								</div> 
 							</div>
