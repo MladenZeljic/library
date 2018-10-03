@@ -4,13 +4,14 @@ function validateAndSendMemberForm(formId) {
 	
 	var member_phone_input = form.getElementsByTagName('input')[0];
 	var member_mobile_input = form.getElementsByTagName('input')[1];
-	var regex = "^[+]?[0-9]{0,4}[/\.-\s]*([(][/\.-\s]*[0-9]{1,4}[/\.-\s]*[)])?[-\s\./0-9]*$";
+	var regex = /^[+]?[0-9]{0,4}[/\.-\s]*([(][/\.-\s]*[0-9]{1,4}[/\.-\s]*[)])?[-\s\./0-9]*$/g;
 	// Matching numbers that may contain zero or one + followed by zero to four digit number, followed by zero
 	// or more slashes, dots, minuses or spaces followed by combination of one bracket, zero or more slashes,
 	// dots, minuses or spaces, with one to four digits, and with zero or more slashes, dots, minuses and spaces 
 	// and one closed bracket. Mentoned combination might appear zero or one time, and it is followed by zero or
 	// more minuses, spaces, dots or slashes and numbers. Regex will not work for partially matched numbers but 
-	// only for fully matched number. Matching is done with march(regex) function.
+	// only for fully matched number. Matching is done with march(regex) function. Match all instances of the 
+	// regex pattern in a string.
 			
 	if(member_phone_input.value.trim().length == 0){
 		member_phone_input.value = '';
@@ -18,7 +19,7 @@ function validateAndSendMemberForm(formId) {
 	}
 	else{
 		member_phone_input.nextElementSibling.innerHTML = '';
-		if(!member_phone_input.value.trim().match(regex)){
+		if(!new RegExp(regex).test(member_phone_input.value.trim())){
 			member_phone_input.value = '';
 			member_phone_input.nextElementSibling.innerHTML = 'Not valid phone number!';
 		}
@@ -29,13 +30,20 @@ function validateAndSendMemberForm(formId) {
 	}
 	else{
 		member_mobile_input.nextElementSibling.innerHTML = '';
-		if(!member_mobile_input.value.trim().match(regex)){
+		if(!new RegExp(regex).test(member_mobile_input.value.trim())){
 			member_mobile_input.value = '';
 			member_mobile_input.nextElementSibling.innerHTML = 'Not valid phone number!';
 		}
 	}
 	if(member_phone_input.nextElementSibling.innerHTML.length == 0 && member_mobile_input.nextElementSibling.innerHTML.length == 0){
-		sendMemberData(formId);
+		var user_select = form.getElementsByTagName('select')[0];
+		var options_length = user_select.options.length;
+		if(options_length > 0){
+			sendMemberData(formId);
+		}
+		else{
+			alert("No more new users are available at this time!");
+		}
 	}
 }
 

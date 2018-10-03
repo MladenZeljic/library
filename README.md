@@ -1,6 +1,6 @@
 # E-Library (MladenZeljic/library)
 
-PHP 5 >= 5.4.0 or PHP 7 are required for the correct operation of this application! 
+PHP 5 >= 5.4.0 or PHP 7 is required for the correct operation of this application! 
 (Because two model classes implement JsonSerializable interface)
 
 For reviewing/testing purposes do one of the following while logging in:

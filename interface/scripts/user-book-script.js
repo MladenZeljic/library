@@ -1,6 +1,15 @@
 function validateAndSendLendForm(formId) {
 	
-	sendLendData(formId);
+	var form = document.getElementById(formId);
+	
+	var copy_select = form.getElementsByTagName('select')[0];
+	var options_length = copy_select.options.length;
+	if(options_length > 0){
+		sendLendData(formId);
+	}
+	else{
+		alert("No more books are available at this time. Please come back later!");	
+	}
 	
 }
 
