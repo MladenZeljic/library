@@ -94,9 +94,27 @@ li > a:visited{
 }
 
 .tab-view-hide{
-	display:none;
+	display: none;
+	opacity: 0;
+	visibility: hidden;
+	-webkit-transition: opacity 1s, visibility 1s;
+	transition: opacity 1s, visibility 1s;
 }
+#tab1-view:not([class^="tab-view-hide"]), #tab2-view:not([class^="tab-view-hide"]){
+	display: block;
+	visibility: visible;
+	opacity: 1;
+	animation: fade 1s;
+}
+@keyframes fade {
+    0% {
+        opacity: 0;
+    }
 
+    100% {
+        opacity: 1;
+    }
+}
 .text-description{
 	text-align: justify;
 	text-justify: inter-word;
